@@ -16,6 +16,7 @@ export type categoryType = {
   imageName: string | null;
   eTag: string | null;
   isDeleted: boolean;
+  signedUrl? : string;
   products: {
     name: string;
     description: string | null;
@@ -37,12 +38,12 @@ type CategoryForProducts = {
 
 export type ProductImage = {
   imageName: string;
-  eTag: string;
+  eTag?: string;
   image_id: number;
   signedUrl?: string;
 };
 
-export type ProductType = {
+export interface ProductType {
   product_id: string;
   category_id: string;
   name: string;
@@ -51,7 +52,12 @@ export type ProductType = {
   stock: number;
   Ratings: number | string; // Assuming Ratings may be stored as Decimal or string
   isDeleted: boolean;
+  tag?: string;
   category: CategoryForProducts;
   images: ProductImage[];
   creator: Creator;
 };
+
+export interface CartItemsType extends ProductType {
+  quantity : number
+}

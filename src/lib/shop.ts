@@ -1,7 +1,24 @@
 "use server";
+import { getCookiesData } from "@/app/(static)/shop/page";
+import { categoryType, ProductType } from "@/types/shop/shopTypes";
 import { cookies } from "next/headers";
 
-export async function getAllCategories(skip: number, take: number) {
+type ProductResponse = {
+  status: number;
+  message: string;
+  data: ProductType[] | null;
+};
+
+type CategoryResponse = {
+  status: number;
+  message: string;
+  data: categoryType[] | null;
+};
+
+export async function getAllCategories(
+  skip: number,
+  take: number
+): Promise<CategoryResponse> {
   try {
     const response = await fetch(
       `http://localhost:8080/user/shop/getAllCategories?skip=${skip}&take=${take}`,
@@ -40,7 +57,10 @@ export async function getAllCategories(skip: number, take: number) {
   }
 }
 
-export async function getAllProducts(skip: number, take: number) {
+export async function getAllProducts(
+  skip: number,
+  take: number
+): Promise<ProductResponse> {
   try {
     const response = await fetch(
       `http://localhost:8080/user/shop/getAllProducts?skip=${skip}&take=${take}`,
@@ -79,7 +99,16 @@ export async function getAllProducts(skip: number, take: number) {
   }
 }
 
-export async function addItemToCart(user_id: string, product_id: string) {
+export async function addItemToCart(product_id: string) {
+  const user_id = await getCookiesData();
+  if (!user_id) {
+    return {
+      status: 401,
+      message: "Please Log In to Delete From Cart",
+      data: null,
+    };
+  }
+
   let data = {
     user_id: user_id,
     product_id: product_id,
@@ -105,7 +134,6 @@ export async function addItemToCart(user_id: string, product_id: string) {
     }
 
     const responseData = await response.json();
-    console.log(responseData);
 
     return {
       status: 200,
@@ -162,10 +190,19 @@ export async function getUserCartItems(userId: string) {
   }
 }
 
-export async function deleteItemFromUserCart(userId: string, userCartId: number) {
+export async function deleteItemFromUserCart(product_id: string) {
+  const userId = await getCookiesData();
+  if (!userId) {
+    return {
+      status: 401,
+      message: "Please Log In to Delete From Cart",
+      data: null,
+    };
+  }
+
   try {
     const response = await fetch(
-      `http://localhost:8080/user/shop/deleteCartItem/${userCartId}/${userId}`,
+      `http://localhost:8080/user/shop/deleteCartItem/${product_id}/${userId}`,
       {
         method: "DELETE",
         headers: {
@@ -202,6 +239,63 @@ export async function deleteItemFromUserCart(userId: string, userCartId: number)
   }
 }
 
+export async function updateQuantityFromCart(
+  product_id: string,
+  quantity: number
+) {
+  const userId = await getCookiesData();
+  if (!userId) {
+    return {
+      status: 401,
+      message: "Please Log In to Update Quantity",
+      data: null,
+    };
+  }
+
+  try {
+    const response = await fetch(
+      `http://localhost:8080/user/shop/update-quantity`,
+      {
+        method: "PUT",
+        body: JSON.stringify({
+          user_id: userId,
+          product_id: product_id,
+          quantity: quantity,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return {
+        status: errorData.status,
+        message: errorData.message || "Failed to Update Quantity from the cart",
+        data: null,
+      };
+    }
+
+    const responseData = await response.json();
+
+    return {
+      status: 200,
+      message: "Successful Update Quantity from the cart..",
+      data: responseData.data,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      message:
+        "Unable to connect to the server at the moment. Please try again later.",
+      data: null,
+    };
+  }
+}
+
 export async function getUserCartItemsCount(userId: string) {
   try {
     const response = await fetch(
@@ -219,7 +313,8 @@ export async function getUserCartItemsCount(userId: string) {
       const errorData = await response.json();
       return {
         status: errorData.status,
-        message: errorData.message || "Failed to FETCH Cart Item Count from the db",
+        message:
+          errorData.message || "Failed to FETCH Cart Item Count from the db",
         data: null,
       };
     }
@@ -241,4 +336,87 @@ export async function getUserCartItemsCount(userId: string) {
   }
 }
 
+export async function getAllProductsInSingleCategory(
+  category_id: string
+): Promise<ProductResponse> {
+  try {
+    const response = await fetch(
+      `http://localhost:8080/user/shop/getAllProductsInCategories/${category_id}?skip=0&take=10`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      }
+    );
 
+    if (!response.ok) {
+      const errorData = await response.json();
+      return {
+        status: errorData.status,
+        message:
+          errorData.message ||
+          "Failed to FETCH All Products of single Category",
+        data: null,
+      };
+    }
+
+    const responseData = await response.json();
+
+    return {
+      status: 200,
+      message: "Successful Fetched All Products of single Category..",
+      data: responseData.data,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      message:
+        "Unable to connect to the server at the moment. Please try again later.",
+      data: null,
+    };
+  }
+}
+
+export async function getSingleProductFromId(
+  product_id: string
+): Promise<{ status: number; data: ProductType | null; message: string }> {
+  try {
+    const response = await fetch(
+      `http://localhost:8080/user/shop/product/${product_id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return {
+        status: errorData.status,
+        message: errorData.message || "Failed to Product",
+        data: null,
+      };
+    }
+
+    const responseData = await response.json();
+
+    return {
+      status: 200,
+      message: "Successful Fetched Product...",
+      data: responseData.data,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: 500,
+      message:
+        "Unable to connect to the server at the moment. Please try again later.",
+      data: null,
+    };
+  }
+}

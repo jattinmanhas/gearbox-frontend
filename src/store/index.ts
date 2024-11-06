@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { UserLoginResponse } from "@/types/forms/loginAuthTypes";
 import { persist, createJSONStorage, PersistOptions } from "zustand/middleware";
 
-
 interface UserState {
   user: UserLoginResponse | null;
   expiresAt: number | null;

@@ -10,7 +10,7 @@ import { createNewProduct } from "@/lib/dashboard";
 import SuccessMessage from "../SuccessMessage";
 import CategoryDropdown from "../ShopComponents/CaregoryDropdown";
 
-interface CategorySearch {
+export interface CategorySearch {
   category_id : string,
   name: string;
   description: string;

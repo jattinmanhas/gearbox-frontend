@@ -52,7 +52,7 @@ export default function ProductCard({singleProduct}: SingleProductProps) {
           </div>
         </div>
       </Link>
-      <AddtoCartButton productId={singleProduct.product_id} />
+      <AddtoCartButton product={singleProduct} />
     </div>
   );
 }

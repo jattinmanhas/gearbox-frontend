@@ -69,13 +69,13 @@ const items = [
     icon: Inbox,
   },
   {
-    title: "Calendar",
-    url: "#",
+    title: "Collections List",
+    url: "/dashboard/products",
     icon: Calendar,
   },
   {
-    title: "Search",
-    url: "#",
+    title: "Create New Blog",
+    url: "/dashboard/blogs/new",
     icon: Search,
   },
   {

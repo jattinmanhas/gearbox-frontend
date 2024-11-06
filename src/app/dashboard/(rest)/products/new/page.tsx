@@ -4,8 +4,8 @@ import React from 'react'
 
 export default function AddNewProductPage() {
   return (
-    <div className="m-9">
-      <div className="w-full mt-12">
+    <div className="max-w-4xl mx-auto p-6 space-y-6">
+      <div className="w-full">
         <h4 className="text-2xl">Create New Product</h4>
         <hr></hr>
         <ProductsForm />

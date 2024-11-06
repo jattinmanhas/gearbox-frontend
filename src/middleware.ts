@@ -54,6 +54,7 @@ export async function middleware(request: NextRequest) {
     "/dashboard",
     "/dashboard/collections/:path*",
     "/dashboard/products/:path*",
+    "/dashboard/blogs/:path*",
   ];
 
     const isAdminRoute = adminRoutes.some((route) =>
@@ -77,6 +78,7 @@ export const config = {
     // "/shop/:path*",
     "/dashboard/",
     "/dashboard/collections/:path*",
-    "/dashboard/products/:path*"
+    "/dashboard/products/:path*",
+    "/dashboard/blogs/:path*"
   ],
 };

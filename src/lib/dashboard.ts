@@ -3,6 +3,7 @@
 import { initialStateTypes } from "@/types/forms/loginAuthTypes";
 import { cookies } from "next/headers";
 import axios from "axios";
+import { BlogPostFormData } from "@/app/dashboard/(rest)/blogs/new/CreateBlog";
 
 export async function createNewCategory(
   prevState: initialStateTypes,
@@ -70,12 +71,12 @@ export async function createNewCategory(
 export async function createNewProduct(
   prevState: initialStateTypes,
   formData: FormData
-): Promise<initialStateTypes> {  
+): Promise<initialStateTypes> {
   const product_name = formData.get("product_name");
   const product_description = formData.get("product_description") as string;
   const product_price = String(formData.get("product_price"));
   const product_stock = String(formData.get("stock"));
-  const category_id = formData.get('category_id') as string;
+  const category_id = formData.get("category_id") as string;
   const files = formData.getAll("file") as File[];
   const token = cookies().get("token")?.value;
 
@@ -92,7 +93,7 @@ export async function createNewProduct(
   data.append("product_description", product_description);
   data.append("product_price", product_price);
   data.append("stock", product_stock);
-  data.append("category_id", category_id)
+  data.append("category_id", category_id);
   files.forEach((file) => {
     data.append("file", file);
   });
@@ -137,3 +138,45 @@ export async function createNewProduct(
     };
   }
 }
+
+export const CreateNewBlog = async (formData: BlogPostFormData) => {
+  const token = cookies().get("token")?.value;
+
+  try {
+    const response = await fetch(
+      "http://localhost:8080/admin/blog/createBlog",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(formData),
+        cache: "no-store",
+      }
+    );
+
+    const responseData = await response.json();
+
+    if (response.ok) {
+      return {
+        status: 200,
+        message: responseData.message,
+        data: responseData.data,
+      };
+    }
+
+    return {
+      status: 400,
+      message: responseData.message || "Blog Creation Failure...",
+      data: null,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      message:
+        "Unable to connect to the server at the moment. Please try again later.",
+      data: null,
+    };
+  }
+};

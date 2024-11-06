@@ -90,9 +90,9 @@ export default function CategoryDropdown({ selected, setSelected }: CategoryDrop
           {loading ? (
             <div className="px-3 py-2 text-sm text-gray-400">Loading...</div>
           ) : (
-            options.map((option: any) => (
+            options.map((option: any, index) => (
               <ComboboxOption
-                key={option.id ?? -1}
+                key={index}
                 value={option}
                 className="group flex cursor-default items-center gap-2 rounded-lg py-1.5 px-3 select-none data-[focus]:bg-white/10"
               >

@@ -1,8 +1,9 @@
 "use client";
-import ProductCard from "@/components/ShopComponents/productCard";
 import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Spinner } from "flowbite-react";
+import { ProductCard } from "@/components/Cards/Card";
+import { ProductType } from "@/types/shop/shopTypes";
 
 const fetchSearchPrducts = async (url: string) => {
   const response = await fetch(url, {
@@ -24,9 +25,10 @@ export default function ProductsSearchPage() {
   const searchQuery = search ? search.get("q") : null;
   const encodedSearchQuery = encodeURI(searchQuery || "");
 
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  console.log(products);
 
   useEffect(() => {
     if (encodedSearchQuery) {
@@ -51,12 +53,25 @@ export default function ProductsSearchPage() {
   if (error) return <div className="m-auto text-center bg-red-800 border border-red-300 text-red-100 p-4 rounded text-xl">Error: {error}</div>;
 
   return (
-    <div className="m-auto text-center">
+    <div>
       <h1>Search Results for "{searchQuery}"</h1>
       {products.length > 0 ? (
-        <div>
-          {products.map((product: any) => (
-            <ProductCard singleProduct={product} />
+        <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4">
+          {products.map((product, index) => (
+            <ProductCard
+              key={index}
+              id={product.product_id}
+              name={product.name}
+              category={product.category.name}
+              image={product.images[0].signedUrl || ""}
+              price={{
+                current: Number(product.price),
+                original: Number(product.price) + 100,
+              }}
+              rating={{ value: Number(product.Ratings), count: 1287 }}
+              tag={product.tag}
+              wholeProduct={product}
+            />
           ))}
         </div>
       ) : (
