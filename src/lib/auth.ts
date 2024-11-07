@@ -1,5 +1,6 @@
 "use server";
 
+import { getCookiesData } from "@/app/(static)/shop/page";
 import { initialStateTypes } from "@/types/forms/loginAuthTypes";
 import { SignupInitialStateTypes } from "@/types/forms/signupAuthTypes";
 import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
@@ -307,3 +308,53 @@ export async function OAuthLogin(data: {email: string, name: string}){
     };
   }
 } 
+
+export async function getCompleteUserDetails() {
+  const userId = await getCookiesData();
+  if(!userId){
+    return {
+      status : 400,
+      message : "Please Login to get User Details",
+      data : null
+    }
+  }
+
+  try {
+    const response = await fetch(
+      `http://localhost:8080/user/userDetails/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return {
+        status: errorData.status,
+        message: errorData.message || "Failed to get User Details",
+        data: null,
+      };
+    }
+
+    const responseData = await response.json();
+
+    return {
+      status: 200,
+      message: "Successful fetched User details..",
+      data: responseData.data,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      message:
+        "Unable to connect to the server at the moment. Please try again later.",
+      data: null,
+    };
+  }
+}
+
+

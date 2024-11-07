@@ -1,6 +1,7 @@
 "use server";
 import { getCookiesData } from "@/app/(static)/shop/page";
-import { categoryType, ProductType } from "@/types/shop/shopTypes";
+import { CartItemsType, categoryType, ProductType } from "@/types/shop/shopTypes";
+import { loadStripe } from "@stripe/stripe-js";
 import { cookies } from "next/headers";
 
 type ProductResponse = {
@@ -370,7 +371,6 @@ export async function getAllProductsInSingleCategory(
       data: responseData.data,
     };
   } catch (error) {
-    console.log(error);
     return {
       status: 500,
       message:
@@ -420,3 +420,32 @@ export async function getSingleProductFromId(
     };
   }
 }
+
+export const stripePayment = async (items : CartItemsType[]) => {
+  if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
+    throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
+  }
+  const token = await cookies().get('token')?.value;
+
+  const body = {
+    products: items,
+  };
+
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  };
+
+  const response = await fetch(
+    `http://localhost:8080/user/shop/create-checkout-session`,
+    {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(body),
+    }
+  );
+
+  const session = await response.json();
+
+  return session;
+};

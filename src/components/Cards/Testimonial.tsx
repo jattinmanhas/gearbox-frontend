@@ -21,7 +21,7 @@ const Testimonial: React.FC<TestimonialProps> = ({
   quote,
 }) => {
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full max-w-md hover:border hover:border-blue-600">
       <CardHeader>
         <div className="flex items-center space-x-4">
           <Image

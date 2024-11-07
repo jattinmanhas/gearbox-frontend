@@ -4,35 +4,38 @@ import { CartButton } from "@/components/Buttons/CartButton";
 import { Card, CardContent } from "./CartCard";
 import Image from "next/image";
 import CartQuantityUpdate from "./CartQuantityUpdate";
-import { getUserCartItems } from "@/lib/shop";
-import { getCookiesData } from "../page";
 import { useCartStore } from "@/store/userCartStore";
+import AddressDisplay from "@/components/ShopComponents/UserAddress";
+import { useCookies } from "react-cookie";
+import { loadStripe } from "@stripe/stripe-js";
+import { stripePayment } from "@/lib/shop";
+import { toast } from "react-toastify";
 
 export default function CartPage() {
   // const userId = await getCookiesData();
-  const { items, totalPrice, totalItems } = useCartStore();
-  console.log(items);
-  console.log(totalItems)
+  const { items, totalPrice } = useCartStore();
+  const [cookies] = useCookies(["userData"]);
 
-  // if(!userId){
-  //   <div>User Not Found</div>
-  // }
-  // const cartItemsResponse = await getUserCartItems(userId);
-  // let cartItems;
-  // if(cartItemsResponse.status === 200){
-  //   cartItems = cartItemsResponse.data.data;
-  // }else{
-  //   cartItems = [];
-  // }
+  if (!cookies.userData) {
+    return <div>User Not Logged IN</div>;
+  }
 
-  // console.log(cartItems);
-  // Calculate total price
-  // const calculateTotal = () => {
-  //   return cartItems.reduce(
-  //     (total: number, item: any) => total + item.product.price * item.quantity,
-  //     0
-  //   );
-  // };
+  const makePayment = async () => {
+    if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
+      throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
+    }
+
+    const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
+
+    const payments = await stripePayment(items);
+    const result = await stripe?.redirectToCheckout({
+      sessionId: payments.data,
+    });
+
+    if (result?.error) {
+      toast.error("Failed to make Payment");
+    }
+  };
 
   return (
     <div className="bg-inherit min-h-screen p-6">
@@ -50,10 +53,7 @@ export default function CartPage() {
         ) : (
           <div className="space-y-4">
             {items.map((item, index) => (
-              <Card
-                key={index}
-                className="bg-gray-800 dark:border-gray-700"
-              >
+              <Card key={index} className="bg-gray-800 dark:border-gray-700">
                 <CardContent className="flex items-center p-4 space-x-4">
                   {/* Product Image */}
                   <Image
@@ -91,12 +91,15 @@ export default function CartPage() {
               <CartButton
                 size="lg"
                 className="w-full mt-4 bg-green-900 hover:bg-green-700 text-white font-bold text-lg"
+                onClick={makePayment}
               >
                 Proceed to Checkout
               </CartButton>
             </div>
           </div>
         )}
+
+        <AddressDisplay userId={cookies.userData.id} />
       </div>
     </div>
   );

@@ -8,10 +8,10 @@ export default function ApplicationLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <section>
+    <section className="flex flex-col min-h-screen">
       {/* <UseSyncUserDataFromCookie/> */}
       <Navbar navItems={navLinks} />
-      <div>{children}</div>
+      <div className="flex-grow">{children}</div>
       <Footer />
     </section>
   );
