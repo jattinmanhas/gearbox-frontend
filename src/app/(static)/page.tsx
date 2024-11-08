@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Search,
   ChevronRight,
   Cpu,
   Smartphone,
@@ -14,6 +13,7 @@ import Link from "next/link";
 import { getAllProducts } from "@/lib/shop";
 import { getAllBlogs } from "@/lib/blog";
 import TestimonialSection from "@/components/Cards/TestiMonialComponent";
+import SearchProductsBlogs from "@/components/Forms/searchProductsBlogs";
 
 const MainLandingPage = async () => {
   const allProducts = await getAllProducts(0, 3);
@@ -52,17 +52,7 @@ const MainLandingPage = async () => {
               </p>
 
               {/* Search Bar */}
-              <div className="mx-auto mb-12 max-w-2xl">
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Search products or articles..."
-                    className="w-full rounded-full bg-white/10 px-6 py-4 pl-12 text-white placeholder-gray-400 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  />
-                  <Search className="absolute left-4 top-4 h-6 w-6 text-gray-400" />
-                </div>
-              </div>
-
+                <SearchProductsBlogs />
               {/* Quick Categories */}
               <div className="flex flex-wrap justify-center gap-4">
                 {[
