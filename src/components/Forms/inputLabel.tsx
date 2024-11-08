@@ -17,7 +17,7 @@ export default function InputLabel({labelName, inputId, placeholder, type }: inp
         id={inputId}
         type={type}
         name={inputId}
-        className="block p-2 bg-inherit border focus:outline-green-800 rounded-lg mb-4 flex-1"
+        className="block p-2 bg-neutral-800 border focus:outline-green-800 rounded-lg mb-4 flex-1"
         placeholder={placeholder}
         autoComplete="off"
          {...(type === 'number' && { min: "0" })}

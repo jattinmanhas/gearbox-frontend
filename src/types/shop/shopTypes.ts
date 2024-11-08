@@ -14,16 +14,21 @@ export type categoryType = {
   category_id: string;
   description: string | null;
   imageName: string | null;
-  eTag: string | null;
+  eTag?: string | null;
   isDeleted: boolean;
-  signedUrl? : string;
+  signedUrl?: string;
+  createdDatetime: string;
+  createdBy: string;
   products: {
     name: string;
     description: string | null;
     product_id: string;
-    price: number;
+    price: string;
     stock: number;
   }[];
+  creator? : {
+    fullname: string;
+  }
 };
 
 type Creator = {
@@ -52,12 +57,13 @@ export interface ProductType {
   stock: number;
   Ratings: number | string; // Assuming Ratings may be stored as Decimal or string
   isDeleted: boolean;
+  createdDatetime : string;
   tag?: string;
   category: CategoryForProducts;
   images: ProductImage[];
   creator: Creator;
-};
+}
 
 export interface CartItemsType extends ProductType {
-  quantity : number
+  quantity: number;
 }

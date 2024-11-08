@@ -69,7 +69,7 @@ export default function CategoryDropdown({ selected, setSelected }: CategoryDrop
         <div className="relative border border-neutral-600 rounded-lg">
           <ComboboxInput
             className={clsx(
-              "w-full rounded-lg border-none bg-inherit p-2 text-sm/6 text-white",
+              "w-full rounded-lg border-none bg-neutral-800 p-2 text-sm/6 text-white",
               "focus:outline-green-800 border border-white"
             )}
             displayValue={(option: any) => option?.name}

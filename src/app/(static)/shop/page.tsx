@@ -2,7 +2,6 @@ import ShopHeader from "@/components/ShopComponents/ShopHeader";
 import {
   getAllCategories,
   getAllProducts,
-  getUserCartItemsCount,
 } from "@/lib/shop";
 import React, { Suspense } from "react";
 import { cookies } from "next/headers";
@@ -43,7 +42,7 @@ const ShopPage = async () => {
   return (
     <div className="w-11/12 m-auto">
       <ShopHeader />
-      <ShopHero />
+      <ShopHero featuredProducts={allProducts.data.slice(0,3)} />
       <Suspense fallback={<p>Loading Categories...</p>}>
         <div className="border mt-6 mb-6 p-2 rounded flex justify-around shadow-md">
           {allCategories.data.length <= 0 ? (

@@ -27,13 +27,13 @@ const items = [
     icon: Inbox,
   },
   {
-    title: "Collections List",
-    url: "/dashboard/products",
+    title: "Categories List",
+    url: "/dashboard/collections",
     icon: Calendar,
   },
   {
-    title: "Create New Blog",
-    url: "/dashboard/blogs/new",
+    title: "Products List",
+    url: "/dashboard/products",
     icon: Search,
   },
   {

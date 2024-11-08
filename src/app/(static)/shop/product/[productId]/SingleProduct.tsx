@@ -126,12 +126,12 @@ const ProductPage: React.FC<{ product: ProductType }> = ({ product }) => {
               </button>
             </div>
 
-            <div className="border-t border-gray-700 pt-8">
+            {/* <div className="border-t border-gray-700 pt-8">
               <h3 className="text-2xl font-bold text-white mb-4">
                 You may also like
               </h3>
-              {/* Recommended products go here */}
-            </div>
+              Recommended products go here
+            </div> */}
           </div>
         </div>
       </div>

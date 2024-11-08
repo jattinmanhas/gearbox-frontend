@@ -1,7 +1,6 @@
 import React from 'react'
 import ProductPage from './SingleProduct';
 import { getSingleProductFromId } from '@/lib/shop';
-import { ProductType } from '@/types/shop/shopTypes';
 
 
 export default  async function SingleProductPage({ params }: { params: { productId : string } }) {
