@@ -23,6 +23,8 @@ export const Dropdown: FC<Props> = ({ username }: Props) => {
 
     if (userLogout.status === 200) {
       clearUser();
+    }else{
+      alert("Failed to Logout")
     }
   };
 

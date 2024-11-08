@@ -87,8 +87,6 @@ const UserProfile = ({ initialUserData }: UserDataProps) => {
         })
       );
 
-      console.log(formData.get("data"));
-
       const updatedUser = await updateUserDetailsWithAddress(formData);
       if (updatedUser.status === 200) {
         toast.success("Profile Updated Successfully...");
