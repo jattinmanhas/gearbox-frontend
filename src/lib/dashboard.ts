@@ -1,9 +1,10 @@
 "use server";
 
-import { initialStateTypes } from "@/types/forms/loginAuthTypes";
-import { cookies } from "next/headers";
-import axios from "axios";
-import { BlogPostFormData } from "@/app/dashboard/(rest)/blogs/new/CreateBlog";
+import {initialStateTypes} from "@/types/forms/loginAuthTypes";
+import {cookies} from "next/headers";
+import {BlogPostFormData} from "@/app/dashboard/(rest)/blogs/new/CreateBlog";
+import {FetchWrapperResponse} from "@/types/misc.types";
+import {fetchWrapper} from "@/lib/fetchapiWrapper";
 
 export async function createNewCategory(
   prevState: initialStateTypes,
@@ -29,7 +30,7 @@ export async function createNewCategory(
 
   try {
     const response = await fetch(
-      "http://localhost:8080/admin/shop/addCategory",
+      "http://localhost:8080/api/admin/shop/addCategory",
       {
         method: "POST",
         body: data,
@@ -100,7 +101,7 @@ export async function createNewProduct(
 
   try {
     const response = await fetch(
-      "http://localhost:8080/admin/shop/addProduct",
+      "http://localhost:8080/api/admin/shop/addProduct",
       {
         method: "POST",
         body: data,
@@ -144,7 +145,7 @@ export const CreateNewBlog = async (formData: BlogPostFormData) => {
 
   try {
     const response = await fetch(
-      "http://localhost:8080/admin/blog/createBlog",
+      "http://localhost:8080/api/admin/blog/createBlog",
       {
         method: "POST",
         headers: {
@@ -180,3 +181,60 @@ export const CreateNewBlog = async (formData: BlogPostFormData) => {
     };
   }
 };
+
+
+export const getAllUsersCount = async (): Promise<FetchWrapperResponse<number>> => {
+  const token = cookies().get("token")?.value;
+
+  const response =  await fetchWrapper<number>({
+    url: "admin/usersCount",
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${token}`,
+    }
+  });
+
+  return response;
+}
+
+export const getAllProductsCount = async (): Promise<FetchWrapperResponse<number>> => {
+  const token = cookies().get("token")?.value;
+
+  const response =  await fetchWrapper<number>({
+    url: "admin/shop/productsCount",
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${token}`,
+    }
+  });
+
+  return response;
+}
+
+export const getAllCategoryCount = async (): Promise<FetchWrapperResponse<number>> => {
+  const token = cookies().get("token")?.value;
+
+  const response =  await fetchWrapper<number>({
+    url: "admin/shop/categoryCount",
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${token}`,
+    }
+  });
+
+  return response;
+}
+
+export const getAllBlogsCount = async (): Promise<FetchWrapperResponse<number>> => {
+  const token = cookies().get("token")?.value;
+
+  const response =  await fetchWrapper<number>({
+    url: "admin/blog/blogsCount",
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${token}`,
+    }
+  });
+
+  return response;
+}

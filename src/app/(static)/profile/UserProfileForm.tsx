@@ -11,34 +11,7 @@ import {
 } from "lucide-react";
 import { updateUserDetailsWithAddress } from "@/app/dashboard/(rest)/blogs/new/Apicalls";
 import { toast } from "react-toastify";
-
-// This would typically come from your API/backend
-
-type UserAddressDetails = {
-  userAddressId: number;
-  street: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  country: string;
-  isDefault: boolean;
-};
-
-type UserDetails = {
-  id: string;
-  email: string;
-  username: string;
-  image?: string;
-  signedUrl?: string;
-  fullname: string;
-  mobileNo: null | number;
-  role: string;
-  userAddress: UserAddressDetails[];
-};
-
-type UserDataProps = {
-  initialUserData: UserDetails;
-};
+import { UserDataProps, UserDetails } from "@/types/forms/UserProfileForm";
 
 const UserProfile = ({ initialUserData }: UserDataProps) => {
   const [userData, setUserData] = useState<UserDetails>(initialUserData);

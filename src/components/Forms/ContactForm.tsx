@@ -31,30 +31,12 @@ export default function ContactForm() {
       <CardContent>
         <form action={formAction}>
           <div className="flex flex-col mt-3">
-            {cookies.userData ? (
-              <>
-                <label className="m-2" htmlFor="category_name">
-                  Email: <span className="text-red-800">*</span>
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  name="email"
-                  className="block p-2 bg-neutral-800 border focus:outline-green-800 rounded-lg mb-4 flex-1"
-                  placeholder="Enter Email"
-                  autoComplete="off"
-                  value={cookies.userData.email}
-                  disabled
-                />
-              </>
-            ) : (
-              <InputLabel
-                labelName="Email"
-                inputId="email"
-                placeholder="Enter Email"
-                type="text"
-              />
-            )}
+            <InputLabel
+              labelName="Email"
+              inputId="email"
+              placeholder="Enter Email"
+              type="text"
+            />
           </div>
           <div className="flex flex-col mt-3">
             <InputLabel

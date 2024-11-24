@@ -1,11 +1,12 @@
 import React from "react";
 import { ChevronRight, Cpu, Smartphone, Laptop } from "lucide-react";
 import { BlogPostCard } from "@/components/Cards/Card";
-import { getAllBlogs } from "@/lib/blog";
+import { BlogPostFormData, getAllBlogs } from "@/lib/blog";
 import Link from "next/link";
+import { FetchWrapperResponse } from "@/types/misc.types";
 
 export default async function BlogPage() {
-  const blogPosts = await await getAllBlogs(0, 10);
+  const blogPosts: FetchWrapperResponse<BlogPostFormData[]> = await await getAllBlogs(0, 10);
   if (blogPosts.status !== 200 || blogPosts.data == null) {
     blogPosts.data = [];
   }

@@ -33,7 +33,7 @@ export default function CategoryDropdown({ selected, setSelected }: CategoryDrop
     setLoading(true);
     try {
       const response = await fetch(
-        `http://localhost:8080/user/shop/categories?query=${encodeURIComponent(
+        `http://localhost:8080/api/user/shop/categories?query=${encodeURIComponent(
           searchQuery
         )}&take=5`
       );

@@ -43,7 +43,7 @@ const SearchPage = () => {
       setLoading(true);
       setError(null);
 
-      fetchBoth(`http://localhost:8080/searchBoth?query=${encodedSearchQuery}`)
+      fetchBoth(`http://localhost:8080/api/searchBoth?query=${encodedSearchQuery}`)
         .then((data) => {
           setBoth(data.data);
           setLoading(false);

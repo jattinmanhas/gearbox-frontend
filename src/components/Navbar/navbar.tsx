@@ -7,7 +7,6 @@ import { NavItems } from "@/constants/navLinks";
 import Navlink from "./navlink";
 import GreenButton from "../Buttons/GreenButton";
 import { Dropdown } from "../Buttons/DropDown";
-import { useCookies } from "react-cookie";
 import { useUserStore } from "@/store";
 
 const navIcons = {

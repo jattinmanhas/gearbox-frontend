@@ -67,3 +67,15 @@ export interface ProductType {
 export interface CartItemsType extends ProductType {
   quantity: number;
 }
+
+export type ProductResponse = {
+  status: number;
+  message: string;
+  data: ProductType[] | null;
+};
+
+export type CategoryResponse = {
+  status: number;
+  message: string;
+  data: categoryType[] | null;
+};

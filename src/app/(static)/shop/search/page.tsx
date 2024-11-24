@@ -36,7 +36,7 @@ export default function ProductsSearchPage() {
       setError(null);
 
       fetchSearchPrducts(
-        `http://localhost:8080/user/shop/product?search=${encodedSearchQuery}&skip=0&take=10`
+        `http://localhost:8080/api/user/shop/product?search=${encodedSearchQuery}&skip=0&take=10`
       )
         .then((data) => {
           setProducts(data.data);

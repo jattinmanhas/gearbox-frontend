@@ -1,16 +1,4 @@
-type FetchWrapperParams = {
-  url: string;
-  method?: string;
-  data?: any;
-  headers?: HeadersInit;
-  cache?: RequestCache;
-};
-
-type FetchWrapperResponse<T> = {
-  status: number;
-  message: string;
-  data: T | null;
-};
+import { FetchWrapperParams, FetchWrapperResponse } from "@/types/misc.types";
 
 export async function fetchWrapper<T>({
   url,
@@ -20,7 +8,7 @@ export async function fetchWrapper<T>({
   cache = "no-store"
 }: FetchWrapperParams): Promise<FetchWrapperResponse<T>> {
   try {
-    const response = await fetch(`http://localhost:8080/${url}`, {
+    const response = await fetch(`http://localhost:8080/api/${url}`, {
       method,
       headers,
       body: data ? JSON.stringify(data) : null,
@@ -39,8 +27,8 @@ export async function fetchWrapper<T>({
     const responseData = await response.json();
     return {
       status: 200,
-      message: "Request successful",
-      data: responseData,
+      message: responseData.message,
+      data: responseData.data,
     };
   } catch (error) {
     return {

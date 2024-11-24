@@ -15,8 +15,8 @@ export async function middleware(request: NextRequest) {
     const refreshTokens = await RefreshUserToken(refreshId.value);
     if (refreshTokens.status === 200) {
       const response = NextResponse.next();
-      const token = refreshTokens.data.tokens.token;
-      const refreshId = refreshTokens.data.data.id;
+      const token = refreshTokens.data!.tokens.token;
+      const refreshId = refreshTokens.data!.data.id;
       response.cookies.set("token", token, {
         httpOnly: true, // Prevent access via JavaScript
         secure: true, // Send only over HTTPS
@@ -35,7 +35,7 @@ export async function middleware(request: NextRequest) {
 
       response.cookies.set(
         "userData",
-        JSON.stringify(refreshTokens.data.data),
+        JSON.stringify(refreshTokens.data!.data),
         { path: "/", httpOnly: false }
       );
 

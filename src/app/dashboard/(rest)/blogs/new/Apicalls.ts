@@ -1,5 +1,5 @@
-import { useUserStore } from "@/store";
-import { BlogPostFormData } from "./CreateBlog";
+import { fetchWrapper } from "@/lib/fetchapiWrapper";
+import { Address } from "@/components/ShopComponents/UserAddress";
 
 export const updloadFileImageToS3 = async (formData: File) => {
   const imageFormData = new FormData();
@@ -7,7 +7,7 @@ export const updloadFileImageToS3 = async (formData: File) => {
 
   try {
     const response = await fetch(
-      "http://localhost:8080/admin/blog/BlogUploadS3",
+      "http://localhost:8080/api/admin/blog/BlogUploadS3",
       {
         method: "POST",
         body: imageFormData,
@@ -42,7 +42,7 @@ export const updloadFileImageToS3 = async (formData: File) => {
 
 export async function updateUserDetailsWithAddress(formData: FormData) {
   try {
-    const response = await fetch("http://localhost:8080/user/updateUser", {
+    const response = await fetch("http://localhost:8080/api/user/updateUser", {
       method: "PUT",
       body: formData,
       cache: "no-store",
@@ -75,40 +75,9 @@ export async function updateUserDetailsWithAddress(formData: FormData) {
 }
 
 export async function getUserAddressDetails(userId: string) {
-  try {
-    const response = await fetch(
-      `http://localhost:8080/user/userAddress/${userId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        cache: "no-store",
-      }
-    );
+  const response = await fetchWrapper<Address>({
+    url : `user/userAddress/${userId}`
+  })
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      return {
-        status: errorData.status,
-        message: errorData.message || "Failed to Fetch User Details",
-        data: null,
-      };
-    }
-
-    const responseData = await response.json();
-
-    return {
-      status: 200,
-      message: responseData.message,
-      data: responseData.data,
-    };
-  } catch (error) {
-    return {
-      status: 500,
-      message:
-        "Unable to connect to the server at the moment. Please try again later.",
-      data: null,
-    };
-  }
+  return response;
 }

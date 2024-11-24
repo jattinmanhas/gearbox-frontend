@@ -1,7 +1,8 @@
 "use server";
 
-import { initialStateTypes } from "@/types/forms/loginAuthTypes";
+import { initialStateTypes, LoginResponse } from "@/types/forms/loginAuthTypes";
 import { cookies } from "next/headers";
+import { fetchWrapper } from "./fetchapiWrapper";
 
 function setTokensInCookies(token: string, refreshId: string) {
   // set token first for 15 mins
@@ -64,48 +65,30 @@ export async function AdminLogin(
     };
   }
 
-  try {
-    const response = await fetch("http://localhost:8080/admin/login", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      cache: "no-store",
-    });
+  const response = await fetchWrapper<LoginResponse>({
+    url: "admin/login",
+    method: "POST",
+    data: data,
+  });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      return {
-        status: errorData.status,
-        message: errorData.message || "Admin Login failed",
-        data: null,
-      };
-    }
-
-    const responseData = await response.json();
-    setTokensInCookies(
-      responseData.data.tokens.token,
-      responseData.data.data.id
-    );
-
-    cookies().set("userData", JSON.stringify(responseData.data.data), {
-      path: "/", // Cookie available to the whole app
-      sameSite: "strict", // Protect against CSRF
-      maxAge: 60 * 60 * 24, // 1 day
-    });
-
+  if (!response.data) {
     return {
-      status: 200,
-      message: "Admin Login successful",
-      data: responseData.data.data,
-    };
-  } catch (error) {
-    return {
-      status: 500,
-      message:
-        "Unable to connect to the server at the moment. Please try again later.",
+      status: 400,
+      message: "Response is Empty.",
       data: null,
     };
   }
+
+  setTokensInCookies(response.data.tokens.token, response.data.data.id);
+
+  cookies().set("userData", JSON.stringify(response.data.data), {
+    sameSite: "strict", // Protect against CSRF
+    maxAge: 60 * 60 * 24, // 1 day
+  });
+
+  return {
+    status: response.status,
+    data : response.data.data,
+    message: response.message
+  };
 }

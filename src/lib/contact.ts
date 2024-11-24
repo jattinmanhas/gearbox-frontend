@@ -1,6 +1,7 @@
 "use server";
 
 import { ContactInitialType } from "@/types/contact.type";
+import { fetchWrapper } from "./fetchapiWrapper";
 
 export const createContactUs = async (
   prevState: ContactInitialType,
@@ -24,38 +25,11 @@ export const createContactUs = async (
     message: message
   }
 
-  try {
-    const response = await fetch("http://localhost:8080/contact", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      cache: "no-store",
-    });
+  const response = await fetchWrapper<any>({
+    url: "contact",
+    method: "POST",
+    data: data
+  })
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      return {
-        status: errorData.status,
-        message: errorData.message || "Signup failed",
-        data: null,
-      };
-    }
-
-    const responseData = await response.json();
-
-    return {
-      status: 200,
-      message: responseData.message,
-      data: responseData.data.data,
-    };
-  } catch (error) {
-    return {
-      status: 500,
-      message:
-        "Unable to connect to the server at the moment. Please try again later.",
-      data: null,
-    };
-  }
+  return response;
 };

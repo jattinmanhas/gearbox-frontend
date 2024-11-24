@@ -1,10 +1,17 @@
 "use server";
 
 import { getCookiesData } from "@/app/(static)/shop/page";
-import { initialStateTypes } from "@/types/forms/loginAuthTypes";
+import {
+  initialStateTypes,
+  LoginResponse,
+  UserLoginResponse,
+} from "@/types/forms/loginAuthTypes";
 import { SignupInitialStateTypes } from "@/types/forms/signupAuthTypes";
 import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { cookies } from "next/headers";
+import { fetchWrapper } from "./fetchapiWrapper";
+import { FetchWrapperResponse } from "@/types/misc.types";
+import { UserDetails } from "@/types/forms/UserProfileForm";
 
 function checkInput(input: string) {
   // Regular expression for validating an Email
@@ -52,7 +59,7 @@ export async function getRefreshIdFromCookie() {
 export async function Login(
   prevState: initialStateTypes,
   formData: FormData
-): Promise<initialStateTypes> {
+): Promise<FetchWrapperResponse<UserLoginResponse>> {
   const username = formData.get("username") as string;
   const password = formData.get("password") as string;
 
@@ -78,56 +85,38 @@ export async function Login(
     };
   }
 
-  try {
-    const response = await fetch("http://localhost:8080/user/login", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      cache: "no-store",
-    });
+  const response = await fetchWrapper<LoginResponse>({
+    url: "user/login",
+    method: "POST",
+    data: data,
+  });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      return {
-        status: errorData.statusCode,
-        message: errorData.message || "Login failed",
-        data: null,
-      };
-    }
-
-    const responseData = await response.json();
-    setTokensInCookies(
-      responseData.data.tokens.token,
-      responseData.data.data.id
-    );
-
-    cookies().set("userData", JSON.stringify(responseData.data.data), {
-      sameSite: "strict", // Protect against CSRF
-      maxAge: 60 * 60 * 24, // 1 day
-    });
-
+  if (!response.data) {
     return {
-      status: responseData.statusCode,
-      message: "Login successful",
-      data: responseData.data.data,
-    };
-
-  } catch (error) {
-    return {
-      status: 500,
-      message:
-        "Unable to connect to the server at the moment. Please try again later.",
+      status: 400,
+      message: "Response is Empty.",
       data: null,
     };
   }
+
+  setTokensInCookies(response.data.tokens.token, response.data.data.id);
+
+  cookies().set("userData", JSON.stringify(response.data.data), {
+    sameSite: "strict", // Protect against CSRF
+    maxAge: 60 * 60 * 24, // 1 day
+  });
+
+  return {
+    status: response.status,
+    data : response.data.data,
+    message: response.message
+  };
 }
 
 export async function Signup(
   prevState: SignupInitialStateTypes,
   formData: FormData
-): Promise<SignupInitialStateTypes> {
+): Promise<FetchWrapperResponse<UserLoginResponse>> {
   const fullname = formData.get("fullname");
   const email = formData.get("email");
   const username = formData.get("username");
@@ -148,131 +137,56 @@ export async function Signup(
     password: password,
   };
 
-  try {
-    const response = await fetch("http://localhost:8080/user/register", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      cache: "no-store",
-    });
+  const response = await fetchWrapper<UserLoginResponse>({
+    url: "user/register",
+    method: "POST",
+    data: data,
+  });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      return {
-        status: errorData.status,
-        message: errorData.message || "Signup failed",
-        data: null,
-      };
-    }
-
-    const responseData = await response.json();
-
-    return {
-      status: 200,
-      message: "Signup successful",
-      data: responseData.data.data,
-    };
-  } catch (error) {
-    return {
-      status: 500,
-      message:
-        "Unable to connect to the server at the moment. Please try again later.",
-      data: null,
-    };
-  }
+  return response;
 }
 
-export async function RefreshUserToken(token: string) {  
-  try {
-    const response = await fetch("http://localhost:8080/user/refreshToken", {
-      method: "POST",
-      body: JSON.stringify({ refreshId: token }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      cache: "no-store",
-    });
+export async function RefreshUserToken(token: string) {
+  const response = await fetchWrapper<LoginResponse>({
+    url : "user/refreshToken",
+    method: "POST",
+    data : {refreshId : token}
+  })
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      return {
-        status: errorData.status,
-        message: errorData.message || "REFRESHING USER AUTH failed",
-        data: null,
-      };
-    }
-
-    const responseData = await response.json();
-
-    return {
-      status: 200,
-      message: "Token Verification Successful..",
-      data: responseData.data,
-    };
-  } catch (error) {
-    return {
-      status: 500,
-      message:
-        "Unable to connect to the server at the moment. Please try again later.",
-      data: null,
-    };
-  }
+  return {
+    status: response.status,
+    data: response.data,
+    message: response.message
+  };
 }
 
 export async function Logout() {
-  try {
     const refreshId = cookies().get("refreshId");
 
-    const response = await fetch("http://localhost:8080/user/logout", {
+    const response = await fetchWrapper<null>({
+      url: "user/logout",
       method: "POST",
-      body: JSON.stringify({ refreshId: refreshId }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      cache: "no-store",
+      data : refreshId
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      return {
-        status: errorData.status,
-        message: errorData.message || "Logout failed",
-        data: null,
-      };
+    if (response.status === 200) {
+      if (cookies().has("refreshId")) cookies().delete("refreshId");
+      if (cookies().has("token")) cookies().delete("token");
+      if (cookies().has("userData")) cookies().delete("userData");
     }
-    const responseData = await response.json();
-    if (cookies().has("refreshId")) cookies().delete("refreshId");
-    if (cookies().has("token")) cookies().delete("token");
-    if(cookies().has("userData")) cookies().delete("userData");
 
-    return {
-      status: 200,
-      message: "User Logout Successful..",
-      data: null,
-    };
-
-  } catch (error) {
-    return {
-      status: 500,
-      message:
-        "Unable to connect to the server at the moment. Please try again later.",
-      data: null,
-    };
-  }
+    return response;
 }
 
-
-export async function OAuthLogin(data: {email: string, name: string}){
+export async function OAuthLogin(data: { email: string; name: string }) {
   try {
-      const response = await fetch("http://localhost:8080/user/google", {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+    const response = await fetch("http://localhost:8080/api/user/google", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -307,54 +221,36 @@ export async function OAuthLogin(data: {email: string, name: string}){
       data: null,
     };
   }
-} 
+}
 
 export async function getCompleteUserDetails() {
   const userId = await getCookiesData();
-  if(!userId){
+  if (!userId) {
     return {
-      status : 400,
-      message : "Please Login to get User Details",
-      data : null
-    }
-  }
-
-  try {
-    const response = await fetch(
-      `http://localhost:8080/user/userDetails/${userId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        cache: "no-store",
-      }
-    );
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      return {
-        status: errorData.status,
-        message: errorData.message || "Failed to get User Details",
-        data: null,
-      };
-    }
-
-    const responseData = await response.json();
-
-    return {
-      status: 200,
-      message: "Successful fetched User details..",
-      data: responseData.data,
-    };
-  } catch (error) {
-    return {
-      status: 500,
-      message:
-        "Unable to connect to the server at the moment. Please try again later.",
+      status: 400,
+      message: "Please Login to get User Details",
       data: null,
     };
   }
+
+  const response = await fetchWrapper<UserDetails>({
+    url : `user/userDetails/${userId}`,
+  })
+
+  return response;
 }
 
+export async function getAllUsers(){
+  const token = cookies().get("token")?.value;
 
+  const response = await fetchWrapper<UserDetails[]>({
+    url : "admin/userList",
+    method: "GET",
+    headers : {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${token}`,
+    }
+  });
+
+  return response;
+}

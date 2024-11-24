@@ -8,6 +8,10 @@ export default async function page() {
     return <div>{user.message}</div>;
   }
 
+  if(user.data == null){
+    return <div>User Not Found...</div>
+  }
+
   if (user.data.userAddress.length == 0) {
     user.data.userAddress = [
       {
@@ -17,7 +21,7 @@ export default async function page() {
         state: "",
         postalCode: "",
         country: "",
-        isDefault: "",
+        isDefault: true,
       },
     ];
   }

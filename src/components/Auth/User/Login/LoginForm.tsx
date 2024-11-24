@@ -20,6 +20,7 @@ export default function LoginForm({ action }: LoginFormProps) {
 
   useEffect(() => {
     if (state.status === 200) {
+      console.log(state.data);
       setUser(state.data as UserLoginResponse);
       router.push("/");
     }

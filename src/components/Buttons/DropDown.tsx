@@ -18,7 +18,7 @@ type Props = {
 export const Dropdown: FC<Props> = ({ username }: Props) => {
   const { user, clearUser } = useUserStore();
 
-  const handleLogout = async () => {
+   const handleLogout = async () => {
     const userLogout = await Logout();
 
     if (userLogout.status === 200) {
