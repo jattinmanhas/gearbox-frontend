@@ -79,6 +79,7 @@ export const config = {
     "/dashboard/",
     "/dashboard/collections/:path*",
     "/dashboard/products/:path*",
+    "/dashboard/orders/:path*",
     "/dashboard/blogs/:path*",
     "/shop/cart"
   ],

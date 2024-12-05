@@ -4,6 +4,7 @@ import {
   CartItemsType,
   CategoryResponse,
   categoryType,
+  OrderWithPaymentType,
   ProductResponse,
   ProductType,
 } from "@/types/shop/shopTypes";
@@ -141,7 +142,7 @@ export async function getSingleProductFromId(
   return response;
 }
 
-export const stripePayment = async (items: CartItemsType[]) => {
+export const stripePayment = async (items: CartItemsType[]) : Promise<FetchWrapperResponse<string>> => {
   if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
     throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
   }
@@ -156,16 +157,35 @@ export const stripePayment = async (items: CartItemsType[]) => {
     Authorization: `Bearer ${token}`,
   };
 
-  const response = await fetch(
-    `http://localhost:8080/user/shop/create-checkout-session`,
-    {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify(body),
-    }
-  );
+  const response = await fetchWrapper<string>({
+    url: "user/shop/create-checkout-session",
+    method: "POST",
+    data: body,
+    headers: headers,
+  });
+  // const response = await fetch(
+  //   `http://localhost:8080/api/user/shop/create-checkout-session`,
+  //   {
+  //     method: "POST",
+  //     headers: headers,
+  //     body: JSON.stringify(body),
+  //   }
+  // );
 
-  const session = await response.json();
-
-  return session;
+  return response;
 };
+
+export async function getAllOrdersWithPayments(): Promise<FetchWrapperResponse<OrderWithPaymentType[]>> {
+  const token = await cookies().get("token")?.value;
+
+  const response = await fetchWrapper<OrderWithPaymentType[]>({
+    url: "admin/shop/getAllOrdersWithPayments",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response;
+}
+

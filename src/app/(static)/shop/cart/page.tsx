@@ -29,7 +29,7 @@ export default function CartPage() {
 
     const payments = await stripePayment(items);
     const result = await stripe?.redirectToCheckout({
-      sessionId: payments.data,
+      sessionId: payments.data as string,
     });
 
     if (result?.error) {

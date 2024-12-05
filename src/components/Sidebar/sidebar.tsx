@@ -54,6 +54,11 @@ const items = [
     url: "/dashboard/users",
     icon: Users,
   },
+  {
+    title: "Orders List",
+    url: "/dashboard/orders",
+    icon: ShoppingBasket,
+  }
 ];
 
 export function AppSidebar() {

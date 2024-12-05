@@ -79,3 +79,24 @@ export type CategoryResponse = {
   message: string;
   data: categoryType[] | null;
 };
+
+export type OrderWithPaymentType = {
+  id: string;
+  totalAmount: number;
+  currency: string;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+  customerId: string;
+  orderItems: {
+    quantity: number;
+    product: {
+      name: string;
+      price: number;
+      description: string;
+    }
+  }[];
+  payment?: {
+    status: string;
+  };
+}
