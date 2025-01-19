@@ -38,3 +38,4 @@ keys.ts
 
 
 .env
+src/constants/firebase.ts

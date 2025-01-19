@@ -2,18 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Ban, Check, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { updloadFileImageToS3 } from "./Apicalls";
-import { Spinner } from "flowbite-react";
 import { toast } from "react-toastify";
-import CategoryDropdown from "@/components/ShopComponents/CaregoryDropdown";
 import { CategorySearch } from "@/components/Forms/productForm";
 import { CreateNewBlog } from "@/lib/dashboard";
 import SuccessMessage from "@/components/SuccessMessage";
+import { CustomInput, CustomTextArea, CustomFileUpload } from '@/components/ui/CustomInput';
 
 interface Section {
   id: string;
@@ -126,57 +122,27 @@ export default function BlogPostForm() {
   return (
     <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-6 space-y-6">
       <div>
-        <h4 className="text-2xl">Create New Blog</h4>
-        <hr></hr>
+        <h4 className="text-2xl text-gray-100">Create New Blog</h4>
+        <hr className="border-neutral-700 my-4" />
 
-        <div className="space-y-2 my-4">
-          <Label htmlFor="blogHeading">Blog Heading</Label>
-          <Input
-            id="blogHeading"
-            value={formData.heading}
-            placeholder="Blog Heading"
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, heading: e.target.value }))
-            }
-          />
-        </div>
+        <CustomInput
+          label="Blog Heading"
+          value={formData.heading}
+          placeholder="Enter blog heading"
+          onChange={(e) => setFormData((prev) => ({ ...prev, heading: e.target.value }))}
+        />
 
-        <div className="space-y-2 my-4">
-          <Label htmlFor="blogImage">Blog Image</Label>
-          <div className="flex m-auto">
-            <Input
-              id="blogImage"
-              type="file"
-              name="file"
-              placeholder="Blog Image"
-              onChange={(e) =>
-                updateMainImage(e.target.files ? e.target.files[0] : null)
-              }
-            />
-            <Ban className="m-auto mx-2 text-red-600 hidden" />
-            <Check className="m-auto mx-2 text-green-700 hidden" />
-          </div>
-        </div>
+        <CustomFileUpload
+          label="Blog Image"
+          onChange={(e) => updateMainImage(e.target.files ? e.target.files[0] : null)}
+        />
 
-        <div className="space-y-2 my-4">
-          <Label htmlFor="blogImage">Select Category</Label>
-          <div className="flex m-auto">
-            <CategoryDropdown selected={selected} setSelected={setSelected} />
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="blogDescription">Description</Label>
-          <Textarea
-            id="blogDescription"
-            value={formData.description}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, description: e.target.value }))
-            }
-            placeholder="Blog Description"
-            rows={4}
-          />
-        </div>
+        <CustomTextArea
+          label="Description"
+          value={formData.description}
+          placeholder="Enter blog description"
+          onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
+        />
       </div>
 
       <div className="space-y-6">
@@ -204,58 +170,38 @@ export default function BlogPostForm() {
                 </Button>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor={`heading-${section.id}`}>Heading</Label>
-                <Input
-                  id={`heading-${section.id}`}
-                  value={section.heading}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      sections: prev.sections.map((s) =>
-                        s.id === section.id
-                          ? { ...s, heading: e.target.value }
-                          : s
-                      ),
-                    }))
-                  }
-                  placeholder="Section Heading"
-                />
-              </div>
+              <CustomInput
+                label="Section Heading"
+                value={section.heading}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    sections: prev.sections.map((s) =>
+                      s.id === section.id ? { ...s, heading: e.target.value } : s
+                    ),
+                  }))
+                }
+              />
 
-              <div className="space-y-2">
-                <Label htmlFor={`image-${section.id}`}>Section Image</Label>
-                <Input
-                  id={`image-${section.id}`}
-                  type="file"
-                  onChange={(e) =>
-                    updateSectionImage(
-                      section.id,
-                      e.target.files ? e.target.files[0] : null
-                    )
-                  }
-                />
-              </div>
+              <CustomFileUpload
+                label="Section Image"
+                onChange={(e) =>
+                  updateSectionImage(section.id, e.target.files ? e.target.files[0] : null)
+                }
+              />
 
-              <div className="space-y-2">
-                <Label htmlFor={`paragraph-${section.id}`}>Paragraph</Label>
-                <Textarea
-                  id={`paragraph-${section.id}`}
-                  value={section.paragraph}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      sections: prev.sections.map((s) =>
-                        s.id === section.id
-                          ? { ...s, paragraph: e.target.value }
-                          : s
-                      ),
-                    }))
-                  }
-                  placeholder="Section Content"
-                  rows={4}
-                />
-              </div>
+              <CustomTextArea
+                label="Section Content"
+                value={section.paragraph}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    sections: prev.sections.map((s) =>
+                      s.id === section.id ? { ...s, paragraph: e.target.value } : s
+                    ),
+                  }))
+                }
+              />
             </CardContent>
           </Card>
         ))}

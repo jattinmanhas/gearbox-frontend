@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, {useRef, useEffect} from "react";
 import ErrorMessage from "../ErrorMessage";
 import InputLabel from "./inputLabel";
 import TextareaLabel from "./textareaLabel";
@@ -10,7 +10,16 @@ import { createNewCategory } from "@/lib/dashboard";
 import SuccessMessage from "../SuccessMessage";
 
 export default function CollectionsForm() {
-  const [state, formAction] = useFormState(createNewCategory, InitialState);
+  const [state, formAction] = useFormState
+  (createNewCategory, InitialState);
+  const categoryRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    if(state.message && state.status === 200){
+      categoryRef.current?.reset();
+    }
+  }, [state])
+
   return (
     <div>
       <div className="mt-2">
@@ -24,7 +33,7 @@ export default function CollectionsForm() {
         )}
       </div>
 
-      <form action={formAction}>
+      <form ref={categoryRef} action={formAction}>
         <InputLabel
           labelName="Category Name"
           inputId="category_name"

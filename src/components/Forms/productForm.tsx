@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import ErrorMessage from "../ErrorMessage";
 import InputLabel from "./inputLabel";
 import TextareaLabel from "./textareaLabel";
@@ -20,11 +20,19 @@ export default function ProductsForm() {
   const [state, formAction] = useFormState(createNewProduct, InitialState);
   const [selected, setSelected] = useState<CategorySearch | null>(null);
   const [category_id, setCategoryId] = useState("");
+  const productRef = useRef<HTMLFormElement>(null);
+
   useEffect(() => {
     if (selected && selected.category_id) {
       setCategoryId(selected.category_id);
     }
   }, [selected]);
+
+  useEffect(() => {
+    if(state.message && state.status === 200){
+      productRef.current?.reset();
+    }
+  }, [state])
 
   return (
     <div>
@@ -39,7 +47,7 @@ export default function ProductsForm() {
         )}
       </div>
 
-      <form action={formAction}>
+      <form ref={productRef} action={formAction}>
         <InputLabel
           labelName="Product Name"
           inputId="product_name"

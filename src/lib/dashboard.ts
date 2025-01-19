@@ -238,3 +238,17 @@ export const getAllBlogsCount = async (): Promise<FetchWrapperResponse<number>> 
 
   return response;
 }
+
+export const getDailyEarnings = async (): Promise<FetchWrapperResponse<number>> => {
+  const token = cookies().get("token")?.value;
+
+  const response = await fetchWrapper<number>({
+    url: "admin/shop/currentDayEarnings",
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${token}`,
+    }
+  });
+
+  return response;
+}

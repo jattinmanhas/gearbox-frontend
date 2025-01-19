@@ -76,7 +76,7 @@ export async function updateUserDetailsWithAddress(formData: FormData) {
 
 export async function getUserAddressDetails(userId: string) {
   const response = await fetchWrapper<Address>({
-    url : `user/userAddress/${userId}`
+    url : `api/user/userAddress/${userId}`
   })
 
   return response;

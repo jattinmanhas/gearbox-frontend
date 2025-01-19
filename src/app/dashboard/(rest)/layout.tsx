@@ -10,7 +10,7 @@ export default function DashboardLayout({
   return (
     <SidebarProvider>
       <AppSidebar />
-      <div className="w-full">
+      <div className="w-full bg-gradient-to-br from-neutral-900 via-neutral-900/95 to-neutral-800">
         <SidebarTrigger />
         {children}
       </div>
