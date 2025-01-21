@@ -8,8 +8,16 @@ import { updloadFileImageToS3 } from "./Apicalls";
 import { toast } from "react-toastify";
 import { CategorySearch } from "@/components/Forms/productForm";
 import { CreateNewBlog } from "@/lib/dashboard";
-import SuccessMessage from "@/components/SuccessMessage";
-import { CustomInput, CustomTextArea, CustomFileUpload } from '@/components/ui/CustomInput';
+import { useRouter } from "next/navigation";
+
+import {
+  CustomInput,
+  CustomTextArea,
+  CustomFileUpload,
+} from "@/components/ui/CustomInput";
+import GreenButton from "@/components/Buttons/GreenButton";
+import { RichTextEditor } from "@/components/Forms/RichTextEditor";
+import CategoryDropdown from "@/components/ShopComponents/CaregoryDropdown";
 
 interface Section {
   id: string;
@@ -41,6 +49,8 @@ export default function BlogPostForm() {
     image: null,
     sections: [],
   });
+
+  const router = useRouter();
 
   useEffect(() => {
     if (selected && selected.category_id) {
@@ -114,6 +124,7 @@ export default function BlogPostForm() {
         image: null,
         sections: [],
       });
+      router.push("/dashboard/blogs");
     } else {
       toast.error(blog.message);
     }
@@ -129,20 +140,47 @@ export default function BlogPostForm() {
           label="Blog Heading"
           value={formData.heading}
           placeholder="Enter blog heading"
-          onChange={(e) => setFormData((prev) => ({ ...prev, heading: e.target.value }))}
+          onChange={(e) =>
+            setFormData((prev) => ({ ...prev, heading: e.target.value }))
+          }
         />
 
         <CustomFileUpload
           label="Blog Image"
-          onChange={(e) => updateMainImage(e.target.files ? e.target.files[0] : null)}
+          onChange={(e) =>
+            updateMainImage(e.target.files ? e.target.files[0] : null)
+          }
         />
 
-        <CustomTextArea
+        <div className="flex flex-col mb-4">
+          <label className="block text-sm font-medium text-gray-200 py-1" htmlFor="">
+            Select Category:
+          </label>
+          <CategoryDropdown selected={selected} setSelected={setSelected} />
+        </div>
+
+        {/* <CustomTextArea
           label="Description"
           value={formData.description}
           placeholder="Enter blog description"
           onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
-        />
+        /> */}
+
+        <div>
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-gray-200 py-1"
+          >
+            Description
+          </label>
+
+          <RichTextEditor
+            content={formData.description}
+            onChange={(value) =>
+              setFormData((prev) => ({ ...prev, description: value }))
+            }
+          />
+        </div>
       </div>
 
       <div className="space-y-6">
@@ -177,7 +215,9 @@ export default function BlogPostForm() {
                   setFormData((prev) => ({
                     ...prev,
                     sections: prev.sections.map((s) =>
-                      s.id === section.id ? { ...s, heading: e.target.value } : s
+                      s.id === section.id
+                        ? { ...s, heading: e.target.value }
+                        : s
                     ),
                   }))
                 }
@@ -186,32 +226,44 @@ export default function BlogPostForm() {
               <CustomFileUpload
                 label="Section Image"
                 onChange={(e) =>
-                  updateSectionImage(section.id, e.target.files ? e.target.files[0] : null)
+                  updateSectionImage(
+                    section.id,
+                    e.target.files ? e.target.files[0] : null
+                  )
                 }
               />
 
-              <CustomTextArea
-                label="Section Content"
-                value={section.paragraph}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    sections: prev.sections.map((s) =>
-                      s.id === section.id ? { ...s, paragraph: e.target.value } : s
-                    ),
-                  }))
-                }
-              />
+              <div>
+                <label
+                  htmlFor="section_content"
+                  className="block text-sm font-medium text-gray-200 py-1"
+                >
+                  Section Content
+                </label>
+
+                <RichTextEditor
+                  content={section.paragraph}
+                  onChange={(newValue) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      sections: prev.sections.map((s) =>
+                        s.id === section.id ? { ...s, paragraph: newValue } : s
+                      ),
+                    }))
+                  }
+                />
+              </div>
             </CardContent>
           </Card>
         ))}
       </div>
 
       <div className="flex gap-4">
-        <Button type="button" onClick={addSection}>
+        <Button type="button" className="px-4 py-2 my-3" onClick={addSection}>
           Add Section
         </Button>
-        <Button type="submit">Save Blog Post</Button>
+        <GreenButton name="Save Blog Post" type="submit" key="green_button" />
+        {/* <Button type="submit">Save Blog Post</Button> */}
       </div>
     </form>
   );

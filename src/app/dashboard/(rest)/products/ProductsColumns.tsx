@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, ArrowUpDown } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export const ProductsColumns: ColumnDef<ProductType>[] = [
   {
@@ -92,8 +93,8 @@ export const ProductsColumns: ColumnDef<ProductType>[] = [
               Copy Product ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View Creator</DropdownMenuItem>
-            <DropdownMenuItem>View Product details</DropdownMenuItem>
+            <Link target="_blank" href={`/shop/product/${product.product_id}`}><DropdownMenuItem>View Product Details</DropdownMenuItem></Link>
+            <DropdownMenuItem className="text-red-500 hover:text-red-500">Delete Product</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

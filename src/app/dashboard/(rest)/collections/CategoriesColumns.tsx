@@ -56,7 +56,7 @@ export const categoryColumns: ColumnDef<categoryType>[] = [
       const date = new Date(row.original.createdDatetime!);
       return date.toLocaleString();
     },
-  },
+  }/* ,
   {
     id: "actions",
     cell: ({ row }) => {
@@ -86,5 +86,5 @@ export const categoryColumns: ColumnDef<categoryType>[] = [
         </DropdownMenu>
       );
     },
-  },
+  }, */
 ];

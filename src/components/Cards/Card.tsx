@@ -208,7 +208,7 @@ export const BlogPostCard: React.FC<BlogPostCardProps> = ({
             {title}
           </h3>
 
-          <p className="mb-4 text-gray-400">{excerpt}</p>
+          <p className="mb-4 text-gray-400" dangerouslySetInnerHTML={{__html: excerpt}} />
 
           {/* Author and Date */}
           {(author || publishDate) && (

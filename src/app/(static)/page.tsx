@@ -21,7 +21,7 @@ const MainLandingPage = async () => {
     allProducts.data = [];
   }
 
-  const blogPosts = await getAllBlogs(0, 4);
+  const blogPosts = await getAllBlogs(0, 3);
   if (blogPosts.status !== 200 || blogPosts.data == null) {
     blogPosts.data = [];
   }
@@ -122,7 +122,7 @@ const MainLandingPage = async () => {
             </Link>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-6 md:grid-cols-4 lg:grid-cols-6">
             {blogPosts.data.map((post, index) => (
               <BlogPostCard
                 key={index}
@@ -133,7 +133,7 @@ const MainLandingPage = async () => {
                 image={post.mainImageSignedUrl || ""}
                 excerpt={limitWords(post.description, 20)}
                 author={{ name: post.author.fullname }}
-                publishDate={post.createdAt}
+                publishDate={new Date(String(post.createdAt)).toLocaleDateString()}
                 featured={true}
               />
             ))}

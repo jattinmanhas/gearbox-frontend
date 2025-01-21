@@ -42,7 +42,7 @@ export default async function GetAllArticles() {
                 image={post.mainImageSignedUrl || ""}
                 excerpt={limitWords(post.description, 20)}
                 author={{ name: post.author.fullname }}
-                publishDate={post.createdAt}
+                publishDate={new Date(String(post.createdAt)).toLocaleDateString()}
                 featured={true}
               />
             ))}

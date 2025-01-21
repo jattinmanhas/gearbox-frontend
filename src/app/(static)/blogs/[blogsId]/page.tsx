@@ -42,7 +42,7 @@ const BlogPage = async ({ params }: { params: { blogsId: string } }) => {
       )}
 
       {/* Blog Description */}
-      <p className="text-lg text-gray-200 mb-8">{blog.description}</p>
+      <p dangerouslySetInnerHTML={{__html: blog.description}} className="text-lg text-gray-200 mb-8" />
 
       {/* Blog Sections */}
 
@@ -50,7 +50,7 @@ const BlogPage = async ({ params }: { params: { blogsId: string } }) => {
         blog.sections.map((section) => (
           <div key={section.id} className="mb-8">
             <h2 className="text-xl font-semibold mb-3">{section.heading}</h2>
-            <p className="text-gray-200 mb-3">{section.paragraph}</p>
+            <p className="text-gray-200 mb-3" dangerouslySetInnerHTML={{__html: section.paragraph}} />
             {section.image && section.image.signedUrl && (
               <div className="mb-4">
                 <Image
