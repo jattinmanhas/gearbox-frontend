@@ -3,16 +3,18 @@ import { getAllProductsInSingleCategory } from "@/lib/shop";
 import { Spinner } from "flowbite-react";
 import React, { Suspense } from "react";
 import { Card } from "../../cart/CartCard";
+import { ProductResponse, ProductType } from "@/types/shop/shopTypes";
 
 export default async function CategoriesProductsList({
   params,
 }: {
   params: { categoryId: string[] };
 }) {
-    const products = await getAllProductsInSingleCategory(params.categoryId[1]);
+    const products  = await getAllProductsInSingleCategory(params.categoryId[1]);
     if(products.status !== 200 || products.data === null){
         products.data = [];
     }
+
     const category_name = decodeURIComponent(params.categoryId[0]);
   return (
     <div className="w-11/12 m-auto">

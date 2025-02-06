@@ -4,11 +4,11 @@ import Link from "next/link";
 import React, { useEffect } from "react";
 import { useFormState } from "react-dom";
 import { InitialState } from "@/constants/constants";
-import { SignupFormProps } from "@/types/forms/signupAuthTypes";
 import ErrorMessage from "@/components/ErrorMessage";
 import { useRouter } from "next/navigation";
+import { LoginFormProps } from "@/types/forms/loginAuthTypes";
 
-export default function SignupForm({ action }: SignupFormProps) {
+export default function SignupForm({ action }: LoginFormProps) {
   const [state, formAction] = useFormState(action, InitialState);
   const router = useRouter();
 

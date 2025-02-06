@@ -124,12 +124,16 @@ export async function getAllProductsInSingleCategory(
   category_id: string,
   skip: number = 0,
   take: number = 10
-): Promise<FetchWrapperResponse<ProductResponse[]>> {
-  const response = await fetchWrapper<ProductResponse[]>({
+){
+  const response = await fetchWrapper<ProductType[]>({
     url: `user/shop/getAllProductsInCategories/${category_id}?skip=${skip}&take=${take}`,
   });
 
-  return response;
+  return {
+    status: response.status,
+    message: response.message,
+    data: response.data,
+  };
 }
 
 export async function getSingleProductFromId(

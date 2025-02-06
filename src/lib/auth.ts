@@ -6,12 +6,12 @@ import {
   LoginResponse,
   UserLoginResponse,
 } from "@/types/forms/loginAuthTypes";
-import { SignupInitialStateTypes } from "@/types/forms/signupAuthTypes";
 import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { cookies } from "next/headers";
 import { fetchWrapper } from "./fetchapiWrapper";
 import { FetchWrapperResponse } from "@/types/misc.types";
 import { UserDetails } from "@/types/forms/UserProfileForm";
+import { User } from "firebase/auth";
 
 function checkInput(input: string) {
   // Regular expression for validating an Email
@@ -114,7 +114,7 @@ export async function Login(
 }
 
 export async function Signup(
-  prevState: SignupInitialStateTypes,
+  prevState: initialStateTypes,
   formData: FormData
 ): Promise<FetchWrapperResponse<UserLoginResponse>> {
   const fullname = formData.get("fullname");
@@ -143,7 +143,11 @@ export async function Signup(
     data: data,
   });
 
-  return response;
+  return {
+    status: response.status,
+    data : response.data,
+    message: response.message
+  };
 }
 
 export async function RefreshUserToken(token: string) {
