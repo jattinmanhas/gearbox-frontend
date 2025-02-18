@@ -4,12 +4,12 @@ type textAreaLabel = {
   labelName: string;
   textareaId: string;
   placeholder: string;
+  className?: string;
 };
 
-
-export default function TextareaLabel({labelName, textareaId, placeholder}: textAreaLabel) {
+export default function TextareaLabel({labelName, textareaId, placeholder, className}: textAreaLabel) {
   return (
-    <div className="flex flex-col mt-3">
+    <div className={`flex flex-col mt-3 ${className}`}>
       <label className="m-2" htmlFor="category_description">
         {labelName}: <span className="text-red-800">*</span>
       </label>

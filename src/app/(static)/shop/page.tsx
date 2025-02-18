@@ -9,7 +9,6 @@ import ShopHero from "@/components/ShopComponents/ShopHero";
 import { ProductCard } from "@/components/Cards/Card";
 import CategoryList from "@/components/ShopComponents/CategoryListing";
 
-
 export async function getCookiesData() {
   "use server";
   const userData = await cookies().get("userData");
@@ -46,7 +45,10 @@ const ShopPage = async () => {
       <Suspense fallback={<p>Loading Categories...</p>}>
         <div className="border mt-6 mb-6 p-2 rounded flex justify-around shadow-md">
           {allCategories.data.length <= 0 ? (
-            <h1 className="text-center text-xl">NO CATEGORIES FOUND</h1>
+            <div className="text-center text-xl p-4 rounded-lg shadow-inner">
+              <h1 className="text-gray-300">NO CATEGORIES FOUND</h1>
+              <p className="text-gray-500 text-sm md:text-md">Please check back later or explore our blogs.</p>
+            </div>
           ) : (
             <CategoryList categories={allCategories.data} />
           )}
@@ -55,7 +57,10 @@ const ShopPage = async () => {
 
       <Suspense fallback={<p>Loading Products...</p>}>
         {allProducts.data.length <= 0 ? (
-          <h1 className="text-center text-2xl">NO PRODUCTS FOUND</h1>
+            <div className="text-center text-xl p-4 rounded-lg shadow-inner">
+            <h1 className="text-gray-300">NO PRODUCTS FOUND</h1>
+            <p className="text-gray-500 text-sm md:text-md">We couldn't find any products at the moment. Please check back later.</p>
+            </div>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {allProducts.data.map((product, index) => (

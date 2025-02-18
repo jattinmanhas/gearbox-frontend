@@ -6,7 +6,8 @@ import Link from "next/link";
 import { FetchWrapperResponse } from "@/types/misc.types";
 
 export default async function BlogPage() {
-  const blogPosts: FetchWrapperResponse<BlogPostFormData[]> = await await getAllBlogs(0, 10);
+  const blogPosts: FetchWrapperResponse<BlogPostFormData[]> =
+    await await getAllBlogs(0, 10);
   if (blogPosts.status !== 200 || blogPosts.data == null) {
     blogPosts.data = [];
   }
@@ -59,7 +60,7 @@ export default async function BlogPage() {
               </h1>
 
               {/* Subheading */}
-              <p className="mb-8 max-w-2xl text-lg text-gray-300">
+              <p className="mb-8 max-w-2xl text-sm md:text-lg text-gray-300">
                 Deep dives into the latest gadgets, tech reviews, and industry
                 insights. Stay ahead of the curve with our expert analysis and
                 hands-on experiences.
@@ -97,7 +98,7 @@ export default async function BlogPage() {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="mb-10 flex items-center justify-between">
-            <h2 className="text-3xl font-bold text-white">
+            <h2 className="text-xl md:text-3xl font-bold text-white">
               Latest Tech Insights
             </h2>
             <Link href="/blogs/articles">
@@ -107,22 +108,36 @@ export default async function BlogPage() {
             </Link>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-6">
-            {blogPosts.data.map((post, index) => (
-              <BlogPostCard
-                key={index}
-                id={post.id}
-                title={post.title}
-                category={post.category?.name!}
-                readTime={String(Math.floor(Math.random() * (15 - 5 + 1)) + 5)}
-                image={post.mainImageSignedUrl || ""}
-                excerpt={limitWords(post.description, 20)}
-                author={{ name: post.author.fullname }}
-                publishDate={new Date(String(post.createdAt)).toLocaleDateString()}
-                featured={true}
-              />
-            ))}
-          </div>
+          {/* Blog Post Cards */}
+          {blogPosts.data.length > 0 ? (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-6">
+              {blogPosts.data.map((post, index) => (
+                <BlogPostCard
+                  key={index}
+                  id={post.id}
+                  title={post.title}
+                  category={post.category?.name!}
+                  readTime={String(
+                    Math.floor(Math.random() * (15 - 5 + 1)) + 5
+                  )}
+                  image={post.mainImageSignedUrl || ""}
+                  excerpt={limitWords(post.description, 20)}
+                  author={{ name: post.author.fullname }}
+                  publishDate={new Date(
+                    String(post.createdAt)
+                  ).toLocaleDateString()}
+                  featured={true}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-16">
+              <h3 className="text-xl md:text-2xl font-bold text-white">No Blogs Found</h3>
+              <p className="mt-4 text-gray-400 text-sm md:text-lg">
+                Check back later for the latest tech insights and updates.
+              </p>
+            </div>
+          )}
         </div>
       </section>
     </>

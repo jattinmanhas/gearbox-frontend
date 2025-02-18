@@ -52,7 +52,7 @@ const MainLandingPage = async () => {
               </p>
 
               {/* Search Bar */}
-                <SearchProductsBlogs />
+              <SearchProductsBlogs />
               {/* Quick Categories */}
               <div className="flex flex-wrap justify-center gap-4">
                 {[
@@ -80,7 +80,7 @@ const MainLandingPage = async () => {
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="mb-10 flex items-center justify-between">
-            <h2 className="text-3xl font-bold text-white">Trending Products</h2>
+            <h2 className="text-xl md:text-3xl font-bold text-white">Trending Products</h2>
             <Link href="shop/product">
               <button className="flex items-center text-green-400 hover:text-green-300">
                 View All <ChevronRight className="ml-1 h-5 w-5" />
@@ -88,31 +88,40 @@ const MainLandingPage = async () => {
             </Link>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {allProducts.data.map((product, index) => (
-              <ProductCard
-                key={index}
-                id={product.product_id}
-                name={product.name}
-                category={product.category.name}
-                image={product.images[0].signedUrl!}
-                price={{
+              {allProducts.data.length > 0 ? (
+              <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                {allProducts.data.map((product, index) => (
+                <ProductCard
+                  key={index}
+                  id={product.product_id}
+                  name={product.name}
+                  category={product.category.name}
+                  image={product.images[0].signedUrl!}
+                  price={{
                   current: Number(product.price),
                   original: Number(product.price) + 100,
-                }}
-                rating={{ value: Number(product.Ratings), count: 1287 }}
-                tag={product.tag}
-                wholeProduct={product}
-              />
-            ))}
-          </div>
+                  }}
+                  rating={{ value: Number(product.Ratings), count: 1287 }}
+                  tag={product.tag}
+                  wholeProduct={product}
+                />
+                ))}
+              </div>
+              ) : (
+              <div className="flex flex-col items-center justify-center py-16">
+                <h3 className="text-lg md:text-2xl font-bold text-white">No Products Found</h3>
+                <p className="mt-4 text-sm md:text-md text-gray-400">
+                Check back later for the latest products and updates.
+                </p>
+              </div>
+              )}
         </div>
       </section>
       {/* Latest Blog Posts Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="mb-10 flex items-center justify-between">
-            <h2 className="text-3xl font-bold text-white">
+            <h2 className="text-xl md:text-3xl font-bold text-white">
               Latest Tech Insights
             </h2>
             <Link href="/blogs/articles">
@@ -122,22 +131,31 @@ const MainLandingPage = async () => {
             </Link>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-4 lg:grid-cols-6">
-            {blogPosts.data.map((post, index) => (
-              <BlogPostCard
-                key={index}
-                id={post.id}
-                title={post.title}
-                category={post.category?.name!}
-                readTime={String(Math.floor(Math.random() * (15 - 5 + 1)) + 5)}
-                image={post.mainImageSignedUrl || ""}
-                excerpt={limitWords(post.description, 20)}
-                author={{ name: post.author.fullname }}
-                publishDate={new Date(String(post.createdAt)).toLocaleDateString()}
-                featured={true}
-              />
-            ))}
-          </div>
+          {blogPosts.data.length > 0 ? (
+            <div className="grid gap-6 md:grid-cols-4 lg:grid-cols-6">
+              {blogPosts.data.map((post, index) => (
+                <BlogPostCard
+                  key={index}
+                  id={post.id}
+                  title={post.title}
+                  category={post.category?.name!}
+                  readTime={String(Math.floor(Math.random() * (15 - 5 + 1)) + 5)}
+                  image={post.mainImageSignedUrl || ""}
+                  excerpt={limitWords(post.description, 20)}
+                  author={{ name: post.author.fullname }}
+                  publishDate={new Date(String(post.createdAt)).toLocaleDateString()}
+                  featured={true}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-16">
+              <h3 className="text-xl md:text-2xl font-bold text-white">No Blogs Found</h3>
+              <p className="mt-4 text-gray-400 text-sm md:text-md">
+                Check back later for the latest tech insights and updates.
+              </p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -147,26 +165,26 @@ const MainLandingPage = async () => {
       {/* Newsletter Section */}
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <div className="rounded-2xl bg-gradient-to-r from-purple-600/20 to-pink-600/20 p-12 backdrop-blur-sm">
-            <div className="mx-auto max-w-2xl text-center">
-              <h2 className="mb-4 text-3xl font-bold text-white">
-                Stay Updated
-              </h2>
-              <p className="mb-6 text-gray-300">
-                Get the latest tech news, exclusive deals, and product launches
-                delivered to your inbox.
-              </p>
-              <div className="flex space-x-4">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="flex-1 rounded-full bg-white/10 px-6 py-3 text-white placeholder-gray-400 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-                />
-                <button className="rounded-full bg-purple-600 px-8 py-3 text-white transition-transform hover:scale-105">
-                  Subscribe
-                </button>
-              </div>
-            </div>
+          <div className="rounded-2xl bg-gradient-to-r from-purple-600/20 to-pink-600/20 p-6 sm:p-12 backdrop-blur-sm">
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="mb-4 text-3xl font-bold text-white">
+            Stay Updated
+          </h2>
+          <p className="mb-6 text-gray-300">
+            Get the latest tech news, exclusive deals, and product launches
+            delivered to your inbox.
+          </p>
+          <div className="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
+            <input
+          type="email"
+          placeholder="Enter your email"
+          className="flex-1 rounded-full bg-white/10 px-6 py-3 text-white placeholder-gray-400 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+            <button className="rounded-full bg-purple-600 px-8 py-3 text-white transition-transform hover:scale-105">
+          Subscribe
+            </button>
+          </div>
+        </div>
           </div>
         </div>
       </section>

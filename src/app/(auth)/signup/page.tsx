@@ -18,8 +18,7 @@ export default function SignupPage() {
                 Welcome to GearBox
               </h2>
               <p className="mt-4 leading-relaxed text-white/90">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                Eligendi nam dolorum aliquam, quibusdam aperiam voluptatum.
+                Gearbox, your ultimate tech destination. Discover cutting-edge gadgets and stay informed with expert reviews, guides, and the latest tech insights.
               </p>
             </div>
           </section>

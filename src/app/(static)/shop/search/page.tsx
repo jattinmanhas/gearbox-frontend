@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Spinner } from "flowbite-react";
 import { ProductCard } from "@/components/Cards/Card";
 import { ProductType } from "@/types/shop/shopTypes";
+import SearchProducts from "@/components/ShopComponents/SearchProducts";
 
 const fetchSearchPrducts = async (url: string) => {
   const response = await fetch(url, {
@@ -28,7 +29,6 @@ export default function ProductsSearchPage() {
   const [products, setProducts] = useState<ProductType[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  console.log(products);
 
   useEffect(() => {
     if (encodedSearchQuery) {
@@ -50,10 +50,11 @@ export default function ProductsSearchPage() {
   }, [encodedSearchQuery]);
 
   if (loading) return <div className="m-auto text-center"><Spinner className="h-8 w-8" /></div>;
-  if (error) return <div className="m-auto text-center bg-red-800 border border-red-300 text-red-100 p-4 rounded text-xl">Error: {error}</div>;
+  if (error) return <div className="m-auto text-center bg-red-900 border border-red-800 text-red-100 p-4 rounded text-xl">Error: {error}</div>;
 
   return (
     <div>
+      <SearchProducts initialSearchQuery={searchQuery || ""} />
       <h1>Search Results for "{searchQuery}"</h1>
       {products.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4">

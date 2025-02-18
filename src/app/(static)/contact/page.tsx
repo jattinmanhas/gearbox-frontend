@@ -1,13 +1,12 @@
 import React from "react";
-import { Card, CardTitle } from "@/components/ui/card";
 import ContactForm from "@/components/Forms/ContactForm";
 
 const ContactUsPage = () => {
   return (
-    <Card className="w-4/5 mx-auto mt-4 px-8 py-4 bg-neutral-900">
-      <CardTitle className="text-2xl underline underline-offset-4">CONTACT US</CardTitle>
+    <div className="w-4/5 mt-4 border border-neutral-800 bg-transparent mx-auto p-6 rounded-lg shadow-lg">
+      <h1 className="text-3xl font-bold text-white mb-4">Contact Us</h1>
       <ContactForm />
-    </Card>
+    </div>
   );
 };
 

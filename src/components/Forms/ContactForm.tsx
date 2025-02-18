@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import { CardContent } from "../ui/card";
 import GreenButton from "@/components/Buttons/GreenButton";
 import TextareaLabel from "@/components/Forms/textareaLabel";
 import InputLabel from "@/components/Forms/inputLabel";
@@ -16,7 +15,7 @@ export default function ContactForm() {
   const [state, formAction] = useFormState(createContactUs, InitialState);
 
   return (
-    <>
+    <div className="rounded-lg shadow-md">
       <div className="mt-2">
         {state.message && state.status !== 200 && (
           <ErrorMessage message={state.message} />
@@ -28,33 +27,34 @@ export default function ContactForm() {
         )}
       </div>
 
-      <CardContent>
-        <form action={formAction}>
-          <div className="flex flex-col mt-3">
-            <InputLabel
-              labelName="Email"
-              inputId="email"
-              placeholder="Enter Email"
-              type="text"
-            />
-          </div>
-          <div className="flex flex-col mt-3">
-            <InputLabel
-              labelName="Subject"
-              inputId="subject"
-              placeholder="Enter Subject"
-              type="text"
-            />
-          </div>
-
-          <TextareaLabel
-            labelName="Message"
-            textareaId="message"
-            placeholder="Enter Message"
+      <form action={formAction} className="space-y-6">
+        <div className="flex flex-col">
+          <InputLabel
+            labelName="Email"
+            inputId="email"
+            placeholder="Enter Email"
+            type="text"
+            className="text-white"
           />
-          <GreenButton name="Submit" type="submit" />
-        </form>
-      </CardContent>
-    </>
+        </div>
+        <div className="flex flex-col">
+          <InputLabel
+            labelName="Subject"
+            inputId="subject"
+            placeholder="Enter Subject"
+            type="text"
+            className="text-white"
+          />
+        </div>
+
+        <TextareaLabel
+          labelName="Message"
+          textareaId="message"
+          placeholder="Enter Message"
+          className="text-white"
+        />
+        <GreenButton name="Submit" type="submit" className="w-full" />
+      </form>
+    </div>
   );
 }

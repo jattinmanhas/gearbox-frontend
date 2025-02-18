@@ -7,6 +7,7 @@ import { InitialState } from "@/constants/constants";
 import ErrorMessage from "@/components/ErrorMessage";
 import { useRouter } from "next/navigation";
 import { LoginFormProps } from "@/types/forms/loginAuthTypes";
+import InputLabel from "@/components/Forms/inputLabel";
 
 export default function SignupForm({ action }: LoginFormProps) {
   const [state, formAction] = useFormState(action, InitialState);
@@ -27,20 +28,27 @@ export default function SignupForm({ action }: LoginFormProps) {
       </div>
       <form action={formAction} className="mt-2 grid grid-cols-6 gap-4">
         <div className="col-span-6">
-          <label htmlFor="fullname" className="defaultLabel">
+          {/* <label htmlFor="fullname" className="defaultLabel">
             Full Name <span className="text-red-500">*</span>
-          </label>
+          </label> */}
 
-          <input
+        <InputLabel 
+          labelName="Full Name"
+          inputId="fullname"
+          placeholder="Enter Full Name"
+          type="text"
+          className="text-white"
+        />
+          {/* <input
             type="text"
             id="fullname"
             name="fullname"
             className="mt-1 w-full defaultInput"
-          />
+          /> */}
         </div>
 
         <div className="col-span-6">
-          <label htmlFor="Email" className="defaultLabel">
+          {/* <label htmlFor="Email" className="defaultLabel">
             Email <span className="text-red-500">*</span>
           </label>
 
@@ -49,11 +57,18 @@ export default function SignupForm({ action }: LoginFormProps) {
             id="Email"
             name="email"
             className="mt-1 w-full defaultInput"
-          />
+          /> */}
+
+          <InputLabel 
+            labelName="Email"
+            inputId="email"
+            placeholder="Enter Email"
+            type="email"
+            className="text-white" />
         </div>
 
         <div className="col-span-6">
-          <label htmlFor="username" className="defaultLabel">
+          {/* <label htmlFor="username" className="defaultLabel">
             Username <span className="text-red-500">*</span>
           </label>
 
@@ -62,11 +77,20 @@ export default function SignupForm({ action }: LoginFormProps) {
             id="username"
             name="username"
             className="mt-1 w-full defaultInput"
-          />
-        </div>
+          />*/}
+
+<InputLabel 
+          labelName="Username"
+          inputId="username"
+          placeholder="Enter Username"
+          type="text"
+          className="text-white" />
+        </div> 
+
+        
 
         <div className="col-span-6">
-          <label htmlFor="Password" className="defaultLabel">
+          {/* <label htmlFor="Password" className="defaultLabel">
             Password <span className="text-red-500">*</span>
           </label>
 
@@ -75,7 +99,14 @@ export default function SignupForm({ action }: LoginFormProps) {
             id="Password"
             name="password"
             className="mt-1 w-full defaultInput"
-          />
+          /> */}
+
+        <InputLabel
+          labelName="Password"
+          inputId="password"
+          placeholder="Enter Password"
+          type="password"
+          className="text-white" />
         </div>
 
         <div className="col-span-6">

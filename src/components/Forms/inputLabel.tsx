@@ -5,11 +5,12 @@ type inputLabel = {
     inputId: string;
     placeholder: string;
     type: string;
+    className?: string;
 }
 
-export default function InputLabel({labelName, inputId, placeholder, type }: inputLabel) {
+export default function InputLabel({labelName, inputId, placeholder, type, className }: inputLabel) {
   return (
-    <div className="flex flex-col mt-3">
+    <div className={`flex flex-col ${className}`}>
       <label className="m-2" htmlFor="category_name">
         {labelName}: <span className="text-red-800">*</span>
       </label>
