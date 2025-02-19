@@ -28,6 +28,7 @@ export default function CategoryDropdown({ selected, setSelected }: CategoryDrop
   const [query, setQuery] = useState("");
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [initialSearch, setInitialSearch] = useState(true);
 
   const fetchOptions = async (searchQuery: string) => {
     setLoading(true);
@@ -53,9 +54,11 @@ export default function CategoryDropdown({ selected, setSelected }: CategoryDrop
 
   useEffect(() => {
     if (query) {
+      setInitialSearch(false);
       debouncedFetchOptions(query);
     } else {
       setOptions([]);
+      setInitialSearch(true);
     }
   }, [query, debouncedFetchOptions]);
 
@@ -89,6 +92,10 @@ export default function CategoryDropdown({ selected, setSelected }: CategoryDrop
         >
           {loading ? (
             <div className="px-3 py-2 text-sm text-gray-400">Loading...</div>
+          ) : query && options.length === 0 ? (
+            <div className="px-3 py-2 text-sm text-gray-400">No results found</div>
+          ) : initialSearch ? (
+            <div className="px-3 py-2 text-sm text-gray-400">Type to search categories</div>
           ) : (
             options.map((option: any, index) => (
               <ComboboxOption

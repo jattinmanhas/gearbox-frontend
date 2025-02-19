@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/CustomInput";
 import GreenButton from "@/components/Buttons/GreenButton";
 import { RichTextEditor } from "@/components/Forms/RichTextEditor";
-import CategoryDropdown from "@/components/ShopComponents/CaregoryDropdown";
+import CategoryDropdown from "@/components/ShopComponents/CategoryDropdown";
 
 interface Section {
   id: string;

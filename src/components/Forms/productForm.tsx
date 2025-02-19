@@ -8,7 +8,7 @@ import { useFormState } from "react-dom";
 import { InitialState } from "@/constants/constants";
 import { createNewProduct } from "@/lib/dashboard";
 import SuccessMessage from "../SuccessMessage";
-import CategoryDropdown from "../ShopComponents/CaregoryDropdown";
+import CategoryDropdown from "../ShopComponents/CategoryDropdown";
 
 export interface CategorySearch {
   category_id : string,
@@ -89,7 +89,7 @@ export default function ProductsForm() {
           placeholder="Enter Product Description"
         />
         <div className="flex flex-col mt-3">
-          <label className="m-2" htmlFor="file">
+          {/* <label className="m-2" htmlFor="file">
             Product Images: <span className="text-red-800">*</span>
           </label>
           <input
@@ -99,6 +99,12 @@ export default function ProductsForm() {
             name="file"
             className="block p-2 bg-inherit border focus:outline-green-800 rounded-lg mb-4 flex-1"
             placeholder="Upload Product Images"
+          /> */}
+          <InputLabel
+            labelName="Product Images"
+            inputId="file"
+            placeholder="Upload Product Images"
+            type="file"
           />
         </div>
         <GreenButton name="Submit" type="submit" />
