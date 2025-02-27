@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { Spinner } from "flowbite-react";
 import { ProductCard } from "@/components/Cards/Card";
 import { ProductType } from "@/types/shop/shopTypes";
-import SearchProducts from "@/components/ShopComponents/SearchProducts";
 
 const fetchSearchPrducts = async (url: string) => {
   const response = await fetch(url, {
@@ -30,13 +29,15 @@ export default function ProductsSearchPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const placeholderImage = "https://images.unsplash.com/photo-1568386453619-84c3ff4b43c5?q=80&w=2564&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+
   useEffect(() => {
     if (encodedSearchQuery) {
       setLoading(true);
       setError(null);
 
       fetchSearchPrducts(
-        `http://localhost:8080/api/user/shop/product?search=${encodedSearchQuery}&skip=0&take=10`
+        `https://localhost:8080/api/shop/product?search=${encodedSearchQuery}&skip=0&take=10`
       )
         .then((data) => {
           setProducts(data.data);
@@ -54,7 +55,6 @@ export default function ProductsSearchPage() {
 
   return (
     <div>
-      <SearchProducts initialSearchQuery={searchQuery || ""} />
       <h1>Search Results for "{searchQuery}"</h1>
       {products.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4">
@@ -64,7 +64,7 @@ export default function ProductsSearchPage() {
               id={product.product_id}
               name={product.name}
               category={product.category.name}
-              image={product.images[0].signedUrl || ""}
+              image={product.images && product.images[0]?.signedUrl || placeholderImage}
               price={{
                 current: Number(product.price),
                 original: Number(product.price) + 100,

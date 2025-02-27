@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node server.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -35,16 +35,18 @@
     "country-state-city": "^3.2.1",
     "dialog": "^0.3.1",
     "embla-carousel-react": "^8.3.0",
+    "express": "^4.21.2",
     "firebase": "^11.0.1",
     "flowbite-react": "^0.10.2",
     "form-data": "^4.0.1",
     "frontend": "file:",
+    "fs": "^0.0.1-security",
+    "https": "^1.0.0",
     "input": "^1.0.1",
     "label": "^0.2.2",
     "lucide-react": "^0.453.0",
     "next": "14.2.13",
     "react": "^18.3.1",
-    "react-cookie": "^7.2.0",
     "react-dom": "^18.3.1",
     "react-toastify": "^10.0.6",
     "recharts": "^2.13.3",
@@ -56,7 +58,8 @@
     "zustand": "^5.0.0-rc.2"
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/express": "^5.0.0",
+    "@types/node": "^20.17.19",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "postcss": "^8",

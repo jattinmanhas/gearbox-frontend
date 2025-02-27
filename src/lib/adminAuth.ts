@@ -4,24 +4,24 @@ import { initialStateTypes, LoginResponse } from "@/types/forms/loginAuthTypes";
 import { cookies } from "next/headers";
 import { fetchWrapper } from "./fetchapiWrapper";
 
-function setTokensInCookies(token: string, refreshId: string) {
-  // set token first for 15 mins
-  cookies().set("token", token, {
-    httpOnly: true, // Prevent access via JavaScript
-    secure: true, // Send only over HTTPS
-    path: "/", // Cookie available to the whole app
-    sameSite: "strict", // Protect against CSRF
-    maxAge: 60 * 15, // 15 min
-  });
+// function setTokensInCookies(token: string, refreshId: string) {
+//   // set token first for 15 mins
+//   cookies().set("token", token, {
+//     httpOnly: true, // Prevent access via JavaScript
+//     secure: true, // Send only over HTTPS
+//     path: "/", // Cookie available to the whole app
+//     sameSite: "strict", // Protect against CSRF
+//     maxAge: 60 * 15, // 15 min
+//   });
 
-  cookies().set("refreshId", refreshId, {
-    httpOnly: true, // Prevent access via JavaScript
-    secure: true, // Send only over HTTPS
-    path: "/", // Cookie available to the whole app
-    sameSite: "strict", // Protect against CSRF
-    maxAge: 60 * 60 * 24, // 1 day
-  });
-}
+//   cookies().set("refreshId", refreshId, {
+//     httpOnly: true, // Prevent access via JavaScript
+//     secure: true, // Send only over HTTPS
+//     path: "/", // Cookie available to the whole app
+//     sameSite: "strict", // Protect against CSRF
+//     maxAge: 60 * 60 * 24, // 1 day
+//   });
+// }
 
 function checkInput(input: string) {
   // Regular expression for validating an Email
@@ -79,12 +79,12 @@ export async function AdminLogin(
     };
   }
 
-  setTokensInCookies(response.data.tokens.token, response.data.data.id);
+  // setTokensInCookies(response.data.tokens.token, response.data.data.id);
 
-  cookies().set("userData", JSON.stringify(response.data.data), {
-    sameSite: "strict", // Protect against CSRF
-    maxAge: 60 * 60 * 24, // 1 day
-  });
+  // cookies().set("userData", JSON.stringify(response.data.data), {
+  //   sameSite: "strict", // Protect against CSRF
+  //   maxAge: 60 * 60 * 24, // 1 day
+  // });
 
   return {
     status: response.status,

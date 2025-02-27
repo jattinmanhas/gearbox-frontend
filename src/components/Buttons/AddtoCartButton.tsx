@@ -3,7 +3,6 @@ import { addItemToCart } from "@/lib/shop";
 import { Spinner } from "flowbite-react";
 import { ShoppingBag } from "lucide-react";
 import React, { Suspense, useState } from "react";
-import { useCookies } from "react-cookie";
 import { toast } from "react-toastify";
 import { useCartStore } from "@/store/userCartStore";
 import { ProductType } from "@/types/shop/shopTypes";
@@ -23,7 +22,7 @@ export default function AddtoCartButton({
   addMargin = false,
   onClick,
 }: ProductIdProps) {
-  const [cookies] = useCookies(["userData"]);
+  // const [cookies] = useCookies(["userData"]);
   const [loading, setLoading] = useState(false);
   const { addItem } = useCartStore();
 
@@ -52,7 +51,7 @@ export default function AddtoCartButton({
     <>
       <button
         className={`rounded-full bg-green-600 p-3 text-white transition-transform hover:scale-110 ${classname}`}
-        onClick={() => handleAddToCart(cookies.userData?.id, product)}
+        // onClick={() => handleAddToCart(cookies.userData?.id, product)}
         disabled={loading}
       >
         <ShoppingBag className={`h-5 w-5 ${addMargin && "mr-1"}`} />

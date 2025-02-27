@@ -1,3 +1,5 @@
+"use client";
+
 import { FC } from "react";
 import {
   Menu,
@@ -47,7 +49,7 @@ export const Dropdown: FC<Props> = ({ username }: Props) => {
             </MenuItem>
           </Link>
           <MenuSeparator className=" h-px bg-neutral-600" />
-          {user?.role === "ADMIN" && (
+          {user?.roleId !== "53fdd43c-132b-4843-a3cc-2504db47698f" && (
             <Link href="/dashboard">
               <MenuItem>
                 <button className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10">

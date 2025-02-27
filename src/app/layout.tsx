@@ -3,7 +3,7 @@ import "./globals.css";
 import HydrationZustand from "@/store/hydrationZustand";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import ErrorBoundary from "@/components/ErrorBoundary"; // Import the ErrorBoundary component
 
 export const metadata: Metadata = {
   title: "GearBox",
@@ -18,7 +18,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <HydrationZustand>{children}</HydrationZustand>
+        <HydrationZustand>
+          <ErrorBoundary>
+            {children}
+          </ErrorBoundary>
+        </HydrationZustand>
         <ToastContainer />
       </body>
     </html>

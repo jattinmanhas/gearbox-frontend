@@ -1,53 +1,65 @@
 "use client";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState } from "react";
 import ErrorMessage from "../ErrorMessage";
 import InputLabel from "./inputLabel";
 import TextareaLabel from "./textareaLabel";
 import GreenButton from "../Buttons/GreenButton";
-import { useFormState } from "react-dom";
-import { InitialState } from "@/constants/constants";
-import { createNewProduct } from "@/lib/dashboard";
 import SuccessMessage from "../SuccessMessage";
 import CategoryDropdown from "../ShopComponents/CategoryDropdown";
+import { CategorySearch } from "@/types/shop/shopTypes";
 
-export interface CategorySearch {
-  category_id : string,
-  name: string;
-  description: string;
-}
 
 export default function ProductsForm() {
-  const [state, formAction] = useFormState(createNewProduct, InitialState);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [selected, setSelected] = useState<CategorySearch | null>(null);
-  const [category_id, setCategoryId] = useState("");
-  const productRef = useRef<HTMLFormElement>(null);
 
-  useEffect(() => {
-    if (selected && selected.category_id) {
-      setCategoryId(selected.category_id);
-    }
-  }, [selected]);
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
 
-  useEffect(() => {
-    if(state.message && state.status === 200){
-      productRef.current?.reset();
+    try {
+      const formData = new FormData(event.currentTarget);
+      
+      // Add category_id to formData if selected
+      if (selected?.category_id) {
+        formData.append('category_id', selected.category_id);
+      }
+
+      console.log(formData);
+
+      // const response = await fetch('https://localhost:8080/api/shop/createProduct', {
+      //   method: 'POST',
+      //   body: formData,
+      // });
+
+      // const data = await response.json();
+
+      // if (!response.ok) {
+      //   throw new Error(data.message || 'Failed to create product');
+      // }
+
+      // setSuccess(data.message || 'Product created successfully');
+      // event.currentTarget.reset();
+      // setSelected(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setLoading(false);
     }
-  }, [state])
+  };
 
   return (
     <div>
       <div className="mt-2">
-        {state.message && state.status !== 200 && (
-          <ErrorMessage message={state.message} />
-        )}
-      </div>
-      <div className="mt-2">
-        {state.message && state.status === 200 && (
-          <SuccessMessage message={state.message} />
-        )}
+        {error && <ErrorMessage message={error} />}
+        {success && <SuccessMessage message={success} />}
       </div>
 
-      <form ref={productRef} action={formAction}>
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
         <InputLabel
           labelName="Product Name"
           inputId="product_name"
@@ -61,7 +73,6 @@ export default function ProductsForm() {
             placeholder="Enter Product Price"
             type="text"
           />
-
           <InputLabel
             labelName="Product Stock"
             inputId="stock"
@@ -77,29 +88,13 @@ export default function ProductsForm() {
           <CategoryDropdown selected={selected} setSelected={setSelected} />
         </div>
 
-        <input
-          type="hidden"
-          id="category_id"
-          name="category_id"
-          value={category_id}
-        />
         <TextareaLabel
           labelName="Product Description"
           textareaId="product_description"
           placeholder="Enter Product Description"
         />
+        
         <div className="flex flex-col mt-3">
-          {/* <label className="m-2" htmlFor="file">
-            Product Images: <span className="text-red-800">*</span>
-          </label>
-          <input
-            id="file"
-            type="file"
-            multiple
-            name="file"
-            className="block p-2 bg-inherit border focus:outline-green-800 rounded-lg mb-4 flex-1"
-            placeholder="Upload Product Images"
-          /> */}
           <InputLabel
             labelName="Product Images"
             inputId="file"
@@ -107,7 +102,12 @@ export default function ProductsForm() {
             type="file"
           />
         </div>
-        <GreenButton name="Submit" type="submit" />
+
+        <GreenButton 
+          name={loading ? "Creating..." : "Submit"} 
+          type="submit"
+          disabled={loading}
+        />
       </form>
     </div>
   );

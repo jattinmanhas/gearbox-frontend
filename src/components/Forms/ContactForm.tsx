@@ -3,7 +3,7 @@ import React from "react";
 import GreenButton from "@/components/Buttons/GreenButton";
 import TextareaLabel from "@/components/Forms/textareaLabel";
 import InputLabel from "@/components/Forms/inputLabel";
-import { useCookies } from "react-cookie";
+// import { useCookies } from "react-cookie";
 import { InitialState } from "@/constants/constants";
 import { useFormState } from "react-dom";
 import { createContactUs } from "@/lib/contact";
@@ -11,7 +11,7 @@ import ErrorMessage from "../ErrorMessage";
 import SuccessMessage from "../SuccessMessage";
 
 export default function ContactForm() {
-  const [cookies] = useCookies(["userData"]);
+  // const [cookies] = useCookies(["userData"]);
   const [state, formAction] = useFormState(createContactUs, InitialState);
 
   return (

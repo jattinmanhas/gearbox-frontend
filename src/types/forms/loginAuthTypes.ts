@@ -2,7 +2,10 @@ export type UserLoginResponse = {
   id: string;
   username: string;
   email: string;
-  role: string;
+  roleId: string;
+  firstName?: string;
+  middleName?: string;
+  lastName?: string;
 };
 
 export type initialStateTypes = {
@@ -12,7 +15,6 @@ export type initialStateTypes = {
 };
 
 export type LoginFunction = (
-  prevState: initialStateTypes,
   formData: FormData
 ) => Promise<initialStateTypes>;
 
@@ -22,9 +24,6 @@ export type LoginFormProps = {
 
 export type LoginResponse = {
   flag: boolean;
-  tokens: {
-    token: string;
-  };
   data: UserLoginResponse;
   message: string;
 };

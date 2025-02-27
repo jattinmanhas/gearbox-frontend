@@ -96,7 +96,7 @@ const MainLandingPage = async () => {
                   id={product.product_id}
                   name={product.name}
                   category={product.category.name}
-                  image={product.images[0].signedUrl!}
+                  image={product.images?.[0]?.signedUrl || ""}
                   price={{
                   current: Number(product.price),
                   original: Number(product.price) + 100,

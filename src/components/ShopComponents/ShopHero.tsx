@@ -3,11 +3,11 @@ import { ShoppingBag, Star, ChevronRight, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { ProductType } from "@/types/shop/shopTypes";
 
-interface ShopHeroProps {
-  featuredProducts: ProductType[];
-}
 
-const ShopHero = ({ featuredProducts }: ShopHeroProps) => {
+const ShopHero: React.FC<{ featuredProducts: ProductType[] }> = ({ featuredProducts }) => {
+  // Add placeholder image
+  const placeholderImage = "https://images.unsplash.com/photo-1568386453619-84c3ff4b43c5?q=80&w=2564&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-slate-900 rounded">
       {/* Floating Elements */}
@@ -73,7 +73,7 @@ const ShopHero = ({ featuredProducts }: ShopHeroProps) => {
                     <div className="flex items-center space-x-4">
                       <div className="h-24 w-24 overflow-hidden rounded-xl">
                         <img
-                          src={product.images[0].signedUrl}
+                          src={product.images && product.images[0]?.signedUrl || placeholderImage}
                           alt={product.name}
                           className="h-full w-full object-cover transition-transform group-hover:scale-110"
                         />

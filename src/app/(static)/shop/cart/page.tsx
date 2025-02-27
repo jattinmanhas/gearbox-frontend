@@ -6,7 +6,6 @@ import Image from "next/image";
 import CartQuantityUpdate from "./CartQuantityUpdate";
 import { useCartStore } from "@/store/userCartStore";
 import AddressDisplay from "@/components/ShopComponents/UserAddress";
-import { useCookies } from "react-cookie";
 import { loadStripe } from "@stripe/stripe-js";
 import { stripePayment } from "@/lib/shop";
 import { toast } from "react-toastify";
@@ -14,11 +13,7 @@ import { toast } from "react-toastify";
 export default function CartPage() {
   // const userId = await getCookiesData();
   const { items, totalPrice } = useCartStore();
-  const [cookies] = useCookies(["userData"]);
 
-  if (!cookies.userData) {
-    return <div>User Not Logged IN</div>;
-  }
 
   const makePayment = async () => {
     if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
@@ -99,7 +94,7 @@ export default function CartPage() {
           </div>
         )}
 
-        <AddressDisplay userId={cookies.userData.id} />
+        {/* <AddressDisplay userId={cookies.userData.id} /> */}
       </div>
     </div>
   );

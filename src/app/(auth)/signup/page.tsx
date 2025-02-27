@@ -1,6 +1,5 @@
 import SignupForm from '@/components/Auth/User/Signup/SignupForm';
 import React from 'react';
-import { Signup } from '@/lib/auth';
 
 export default function SignupPage() {
   return (
@@ -33,7 +32,7 @@ export default function SignupPage() {
                   Eligendi nam dolorum aliquam, quibusdam aperiam voluptatum.
                 </p>
               </div>
-              <SignupForm action={Signup} />
+              <SignupForm />
             </div>
           </main>
         </div>

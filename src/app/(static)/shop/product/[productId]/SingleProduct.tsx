@@ -15,6 +15,8 @@ import { ProductType } from "@/types/shop/shopTypes";
 const ProductPage: React.FC<{ product: ProductType }> = ({ product }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+  const placeholderImage = "https://images.unsplash.com/photo-1568386453619-84c3ff4b43c5?q=80&w=2564&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+
   // Helper function to format price
   const formatPrice = (amount: number, currency = "$") =>
     `${currency}${amount.toFixed(2)}`;
@@ -22,13 +24,21 @@ const ProductPage: React.FC<{ product: ProductType }> = ({ product }) => {
   // Handle image carousel navigation
   const handlePrevImage = () => {
     setCurrentImageIndex((prevIndex) =>
-      prevIndex === 0 ? product.images.length - 1 : prevIndex - 1
+      product.images && product.images.length > 0
+        ? prevIndex === 0
+          ? product.images.length - 1
+          : prevIndex - 1
+        : 0
     );
   };
 
   const handleNextImage = () => {
     setCurrentImageIndex((prevIndex) =>
-      prevIndex === product.images.length - 1 ? 0 : prevIndex + 1
+      product.images && product.images.length > 0
+        ? prevIndex === product.images.length - 1
+          ? 0
+          : prevIndex + 1
+        : 0
     );
   };
 
@@ -40,7 +50,7 @@ const ProductPage: React.FC<{ product: ProductType }> = ({ product }) => {
           <div>
             <div className="relative mb-6 rounded-2xl overflow-hidden">
               <img
-                src={product.images[currentImageIndex].signedUrl}
+                src={product.images && product.images[currentImageIndex]?.signedUrl || placeholderImage}
                 alt={product.name}
                 className="w-full h-[480px] object-cover"
               />
@@ -58,23 +68,33 @@ const ProductPage: React.FC<{ product: ProductType }> = ({ product }) => {
               </button>
             </div>
             <div className="flex justify-center space-x-3">
-              {product.images.map((image, index) => (
-                <div
-                  key={index}
-                  className={`w-20 h-20 rounded-lg overflow-hidden cursor-pointer transition ${
-                    index === currentImageIndex
-                      ? "border-2 border-purple-600"
-                      : "hover:opacity-80"
-                  }`}
-                  onClick={() => setCurrentImageIndex(index)}
-                >
+              {product.images.length > 0 ? (
+                product.images.map((image, index) => (
+                  <div
+                    key={index}
+                    className={`w-20 h-20 rounded-lg overflow-hidden cursor-pointer transition ${
+                      index === currentImageIndex
+                        ? "border-2 border-purple-600"
+                        : "hover:opacity-80"
+                    }`}
+                    onClick={() => setCurrentImageIndex(index)}
+                  >
+                    <img
+                      src={image.signedUrl}
+                      alt={`Image ${index}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))
+              ) : (
+                <div className="w-20 h-20 rounded-lg overflow-hidden">
                   <img
-                    src={image.signedUrl}
-                    alt={`Image ${index}`}
+                    src={placeholderImage}
+                    alt="Placeholder"
                     className="w-full h-full object-cover"
                   />
                 </div>
-              ))}
+              )}
             </div>
           </div>
 

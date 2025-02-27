@@ -43,7 +43,7 @@ export async function getAllBlogs(
   take: number
 ): Promise<FetchWrapperResponse<BlogPostFormData[]>> {
   const response = await fetchWrapper<BlogPostFormData[]>({
-    url: `user/blog/getAllBlogs?skip=${skip}&take=${take}`,
+    url: `blog/getAllBlogs?skip=${skip}&take=${take}`,
   })
 
   return response;

@@ -1,5 +1,4 @@
 "use server";
-import { getCookiesData } from "@/app/(static)/shop/page";
 import {
   CartItemsType,
   CategoryResponse,
@@ -18,7 +17,7 @@ export async function getAllCategories(
   take: number
 ): Promise<FetchWrapperResponse<categoryType[]>> {
   const response = await fetchWrapper<categoryType[]>({
-    url: `user/shop/getAllCategories?skip=${skip}&take=${take}`,
+    url: `shop/getAllCategories?skip=${skip}&take=${take}`,
   });
 
   return response;
@@ -29,14 +28,14 @@ export async function getAllProducts(
   take: number
 ): Promise<FetchWrapperResponse<ProductType[]>> {
   const response = await fetchWrapper<ProductType[]>({
-    url: `user/shop/getAllProducts?skip=${skip}&take=${take}`,
+    url: `shop/getAllProducts?skip=${skip}&take=${take}`,
   });
 
   return response;
 }
 
 export async function addItemToCart(product_id: string) {
-  const user_id = await getCookiesData();
+  const user_id = "1";
   if (!user_id) {
     return {
       status: 401,
@@ -51,7 +50,7 @@ export async function addItemToCart(product_id: string) {
   };
 
   const response = await fetchWrapper<any>({
-    url: "user/shop/addToCart",
+    url: "shop/addToCart",
     method: "POST",
     data: data,
   });
@@ -61,7 +60,7 @@ export async function addItemToCart(product_id: string) {
 
 export async function getUserCartItems(userId: string) {
   const response = await fetchWrapper<CartItemsType>({
-    url : `user/shop/userCart/${userId}`,
+    url : `shop/userCart/${userId}`,
     method: "GET"
   });
 
@@ -69,7 +68,7 @@ export async function getUserCartItems(userId: string) {
 }
 
 export async function deleteItemFromUserCart(product_id: string) {
-  const userId = await getCookiesData();
+  const userId = '1';
   if (!userId) {
     return {
       status: 401,
@@ -79,7 +78,7 @@ export async function deleteItemFromUserCart(product_id: string) {
   }
 
   const response = await fetchWrapper<null>({
-    url:  `user/shop/deleteCartItem/${product_id}/${userId}`,
+    url:  `shop/deleteCartItem/${product_id}/${userId}`,
     method: "DELETE"
   });
 
@@ -90,7 +89,7 @@ export async function updateQuantityFromCart(
   product_id: string,
   quantity: number
 ) {
-  const userId = await getCookiesData();
+  const userId = "1";
   if (!userId) {
     return {
       status: 401,
@@ -100,7 +99,7 @@ export async function updateQuantityFromCart(
   }
 
   const response = await fetchWrapper<null>({
-    url: "user/shop/update-quantity",
+    url: "shop/update-quantity",
     method: "PUT",
     data: {
       user_id: userId,
@@ -114,7 +113,7 @@ export async function updateQuantityFromCart(
 
 export async function getUserCartItemsCount(userId: string) {
   const response = await fetchWrapper<Number>({
-    url: `user/shop/getCartCount/${userId}`,
+    url: `shop/getCartCount/${userId}`,
   });
 
   return response;
@@ -126,7 +125,7 @@ export async function getAllProductsInSingleCategory(
   take: number = 10
 ){
   const response = await fetchWrapper<ProductType[]>({
-    url: `user/shop/getAllProductsInCategories/${category_id}?skip=${skip}&take=${take}`,
+    url: `shop/getAllProductsInCategories/${category_id}?skip=${skip}&take=${take}`,
   });
 
   return {
@@ -140,7 +139,7 @@ export async function getSingleProductFromId(
   product_id: string
 ): Promise<FetchWrapperResponse<ProductType>> {
   const response = await fetchWrapper<ProductType>({
-    url: `user/shop/product/${product_id}`,
+    url: `shop/product/${product_id}`,
   });
 
   return response;
@@ -162,13 +161,13 @@ export const stripePayment = async (items: CartItemsType[]) : Promise<FetchWrapp
   };
 
   const response = await fetchWrapper<string>({
-    url: "user/shop/create-checkout-session",
+    url: "shop/create-checkout-session",
     method: "POST",
     data: body,
     headers: headers,
   });
   // const response = await fetch(
-  //   `http://localhost:8080/api/user/shop/create-checkout-session`,
+  //   `http://localhost:8080/api/shop/create-checkout-session`,
   //   {
   //     method: "POST",
   //     headers: headers,

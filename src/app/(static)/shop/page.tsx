@@ -8,35 +8,23 @@ import { cookies } from "next/headers";
 import ShopHero from "@/components/ShopComponents/ShopHero";
 import { ProductCard } from "@/components/Cards/Card";
 import CategoryList from "@/components/ShopComponents/CategoryListing";
-
-export async function getCookiesData() {
-  "use server";
-  const userData = await cookies().get("userData");
-
-  if (userData && userData.value) {
-    try {
-      const userId = JSON.parse(userData?.value).id;
-      return userId;
-    } catch (error) {
-      console.error("Failed to parse userData cookie:", error);
-      return null;
-    }
-  }
-
-  return null;
-}
-
+import { Card } from "./cart/CartCard";
 
 const ShopPage = async () => {
-  const allCategories  = await getAllCategories(0, 3);
+  const allCategories  = await getAllCategories(6, 5);
+  console.log(allCategories);
   if (allCategories.status !== 200 || allCategories.data == null) {
     allCategories.data = [];
   }
   const allProducts = await getAllProducts(0, 10);
-  if(allProducts.status !== 200 || allProducts.data == null){
+  
+  // Default placeholder image - you can use the same one from SingleProduct component
+  const placeholderImage = "https://images.unsplash.com/photo-1568386453619-84c3ff4b43c5?q=80&w=2564&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+
+  if (allProducts.status !== 200 || allProducts.data == null) {
     allProducts.data = [];
   }
-  const userId = await getCookiesData();
+  // const userId = await getCookiesData();
 
   return (
     <div className="w-11/12 m-auto">
@@ -57,19 +45,18 @@ const ShopPage = async () => {
 
       <Suspense fallback={<p>Loading Products...</p>}>
         {allProducts.data.length <= 0 ? (
-            <div className="text-center text-xl p-4 rounded-lg shadow-inner">
-            <h1 className="text-gray-300">NO PRODUCTS FOUND</h1>
-            <p className="text-gray-500 text-sm md:text-md">We couldn't find any products at the moment. Please check back later.</p>
-            </div>
+          <Card key="-1" className="bg-gray-800 dark:border-gray-700 p-4 mt-6">
+            <h1 className="text-center">PRODUCTS NOT FOUND</h1>
+          </Card>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-3 lg:grid-cols-4">
             {allProducts.data.map((product, index) => (
               <ProductCard
                 key={index}
                 id={product.product_id}
                 name={product.name}
                 category={product.category.name}
-                image={product.images[0].signedUrl || ""}
+                image={product.images && product.images[0]?.signedUrl || placeholderImage}
                 price={{
                   current: Number(product.price),
                   original: Number(product.price) + 100,

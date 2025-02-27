@@ -100,3 +100,9 @@ export type OrderWithPaymentType = {
     status: string;
   };
 }
+
+export interface CategorySearch{
+  category_id: string;
+  name: string;
+  description: string;
+}

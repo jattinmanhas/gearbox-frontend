@@ -15,6 +15,8 @@ export default async function CategoriesProductsList({
         products.data = [];
     }
 
+    const placeholderImage = "https://images.unsplash.com/photo-1568386453619-84c3ff4b43c5?q=80&w=2564&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+
     const category_name = decodeURIComponent(params.categoryId[0]);
   return (
     <div className="w-11/12 m-auto">
@@ -41,7 +43,7 @@ export default async function CategoriesProductsList({
                 id={product.product_id}
                 name={product.name}
                 category={product.category.name}
-                image={product.images[0].signedUrl || ""}
+                image={product.images && product.images[0]?.signedUrl || placeholderImage}
                 price={{
                   current: Number(product.price),
                   original: Number(product.price) + 100,

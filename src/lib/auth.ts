@@ -1,12 +1,11 @@
 "use server";
 
-import { getCookiesData } from "@/app/(static)/shop/page";
+// import { getCookiesData } from "@/app/(static)/shop/page";
 import {
   initialStateTypes,
   LoginResponse,
   UserLoginResponse,
 } from "@/types/forms/loginAuthTypes";
-import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import { cookies } from "next/headers";
 import { fetchWrapper } from "./fetchapiWrapper";
 import { FetchWrapperResponse } from "@/types/misc.types";
@@ -45,19 +44,12 @@ function setTokensInCookies(token: string, refreshId: string) {
 }
 
 export async function getTokenValueFromCookie() {
-  const token = cookies().get("token");
+  const token = cookies().get("access_token");
 
   return token;
 }
 
-export async function getRefreshIdFromCookie() {
-  const refresh = cookies().get("refreshId");
-
-  return refresh;
-}
-
 export async function Login(
-  prevState: initialStateTypes,
   formData: FormData
 ): Promise<FetchWrapperResponse<UserLoginResponse>> {
   const username = formData.get("username") as string;
@@ -85,7 +77,7 @@ export async function Login(
     };
   }
 
-  const response = await fetchWrapper<LoginResponse>({
+  const response = await fetchWrapper<UserLoginResponse>({
     url: "user/login",
     method: "POST",
     data: data,
@@ -93,36 +85,30 @@ export async function Login(
 
   if (!response.data) {
     return {
-      status: 400,
-      message: "Response is Empty.",
+      status: response.status,
+      message: response.message,
       data: null,
     };
   }
 
-  setTokensInCookies(response.data.tokens.token, response.data.data.id);
-
-  cookies().set("userData", JSON.stringify(response.data.data), {
-    sameSite: "strict", // Protect against CSRF
-    maxAge: 60 * 60 * 24, // 1 day
-  });
-
   return {
     status: response.status,
-    data : response.data.data,
+    data : response.data,
     message: response.message
   };
 }
 
 export async function Signup(
-  prevState: initialStateTypes,
   formData: FormData
 ): Promise<FetchWrapperResponse<UserLoginResponse>> {
-  const fullname = formData.get("fullname");
+  const firstName = formData.get("firstName");
+  const middleName = formData.get("middleName");
+  const lastName = formData.get("lastName");
   const email = formData.get("email");
   const username = formData.get("username");
   const password = formData.get("password");
 
-  if (!fullname || !email || !username || !password) {
+  if (!firstName || !lastName || !email || !username || !password) {
     return {
       status: 400,
       message: "Some fields are empty, Please fill all details.",
@@ -131,10 +117,13 @@ export async function Signup(
   }
 
   let data = {
-    fullname: fullname,
+    firstName: firstName,
+    middleName: middleName,
+    lastName: lastName,
     email: email,
     username: username,
     password: password,
+    roleId: "53fdd43c-132b-4843-a3cc-2504db47698f"
   };
 
   const response = await fetchWrapper<UserLoginResponse>({
@@ -165,18 +154,15 @@ export async function RefreshUserToken(token: string) {
 }
 
 export async function Logout() {
-    const refreshId = cookies().get("refreshId");
-
     const response = await fetchWrapper<null>({
       url: "user/logout",
       method: "POST",
-      data : refreshId
     });
 
+    console.log(response);
     if (response.status === 200) {
-      if (cookies().has("refreshId")) cookies().delete("refreshId");
-      if (cookies().has("token")) cookies().delete("token");
-      if (cookies().has("userData")) cookies().delete("userData");
+      if (cookies().has("access_token")) cookies().delete("access_token");
+      if (cookies().has("user_ref")) cookies().delete("user_ref");
     }
 
     return response;
@@ -228,7 +214,7 @@ export async function OAuthLogin(data: { email: string; name: string }) {
 }
 
 export async function getCompleteUserDetails() {
-  const userId = await getCookiesData();
+  const userId = await "1";
   if (!userId) {
     return {
       status: 400,
@@ -245,7 +231,7 @@ export async function getCompleteUserDetails() {
 }
 
 export async function getAllUsers(){
-  const token = cookies().get("token")?.value;
+  const token = cookies().get("access_token")?.value;
 
   const response = await fetchWrapper<UserDetails[]>({
     url : "admin/userList",

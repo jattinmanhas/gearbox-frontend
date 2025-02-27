@@ -21,7 +21,7 @@ export const ProductsColumns: ColumnDef<ProductType>[] = [
     header: "Image",
     cell: ({ row }) => (
       <Image
-        src={row.original.images[0].signedUrl || ""}
+        src={row.original.images[0]?.signedUrl || ""}
         alt={row.original.name}
         width={80} // Adjust the width and height as needed
         height={80}
